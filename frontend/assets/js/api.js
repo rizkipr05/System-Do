@@ -1,10 +1,18 @@
 const API_BASE = "http://localhost:8081/api";
 
-async function postJson(path, body) {
+function authHeaders() {
+  const token = localStorage.getItem("token");
+  return token ? { "Authorization": `Bearer ${token}` } : {};
+}
+
+async function requestJson(path, method, body) {
   const res = await fetch(`${API_BASE}${path}`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
+    method,
+    headers: {
+      "Content-Type": "application/json",
+      ...authHeaders(),
+    },
+    body: body === undefined ? undefined : JSON.stringify(body),
   });
 
   let data = null;
@@ -16,13 +24,24 @@ async function postJson(path, body) {
   return data;
 }
 
+async function postJson(path, body) {
+  return requestJson(path, "POST", body);
+}
+
+async function putJson(path, body) {
+  return requestJson(path, "PUT", body);
+}
+
+async function deleteJson(path) {
+  return requestJson(path, "DELETE");
+}
+
 async function getJson(path) {
-  const token = localStorage.getItem("token");
   const res = await fetch(`${API_BASE}${path}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      ...(token ? { "Authorization": `Bearer ${token}` } : {})
+      ...authHeaders()
     }
   });
 

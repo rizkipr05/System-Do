@@ -131,6 +131,76 @@ html, body {
   color: #b02a37;
 }
 
+.form-section-title {
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.signature-pad {
+  border: 1px dashed #c7c3d8;
+  border-radius: 12px;
+  width: 100%;
+  height: 160px;
+  background: #fbf9ff;
+}
+
+.empty-state {
+  color: #8b86a3;
+  font-size: 14px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #f3efff;
+  color: #5b21b6;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.do-sheet {
+  background: #fff;
+  border: 1px solid #dedbe8;
+  border-radius: 14px;
+  padding: 18px;
+}
+
+.do-title {
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.do-meta {
+  font-size: 13px;
+  color: #5b5770;
+}
+
+.do-table th, .do-table td {
+  font-size: 13px;
+}
+
+@media print {
+  body {
+    background: #fff;
+  }
+  .sidebar,
+  .topbar,
+  .print-hide {
+    display: none !important;
+  }
+  .dashboard-shell {
+    box-shadow: none;
+  }
+  .do-sheet {
+    border: 0;
+    border-radius: 0;
+    padding: 0;
+  }
+}
+
 @media (max-width: 991px) {
   .dashboard-shell {
     width: 100%;

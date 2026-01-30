@@ -17,11 +17,12 @@
           <span class="badge-soft" id="customerBadge">Customer</span>
         </div>
         <nav class="nav flex-column gap-1">
-          <a class="nav-link active" href="#profile">Profil</a>
-          <a class="nav-link" href="#order">Buat Pesanan</a>
-          <a class="nav-link" href="#tracking">Tracking</a>
-          <a class="nav-link" href="#confirm">Konfirmasi</a>
-          <a class="nav-link" href="#history">Riwayat</a>
+          <a class="nav-link active" href="customer-dashboard.html">Dashboard</a>
+          <a class="nav-link" href="customer-profile.html">Profil</a>
+          <a class="nav-link" href="customer-order.html">Buat Pesanan</a>
+          <a class="nav-link" href="customer-tracking.html">Tracking</a>
+          <a class="nav-link" href="customer-confirm.html">Konfirmasi</a>
+          <a class="nav-link" href="customer-history.html">Riwayat</a>
         </nav>
         <div class="mt-4">
           <button class="btn btn-dark w-100" onclick="logout('login-customer.html')">Logout</button>
@@ -47,7 +48,7 @@
                 <span class="stat-icon"><i class="bi bi-receipt"></i></span>
                 <div>
                   <div class="text-muted small">Order Aktif</div>
-                  <div class="h5 mb-0">2</div>
+                  <div class="h5 mb-0" id="statActive">0</div>
                 </div>
               </div>
             </div>
@@ -58,7 +59,7 @@
                 <span class="stat-icon"><i class="bi bi-check-circle"></i></span>
                 <div>
                   <div class="text-muted small">Order Selesai</div>
-                  <div class="h5 mb-0">12</div>
+                  <div class="h5 mb-0" id="statCompleted">0</div>
                 </div>
               </div>
             </div>
@@ -69,76 +70,22 @@
                 <span class="stat-icon"><i class="bi bi-truck"></i></span>
                 <div>
                   <div class="text-muted small">Dalam Perjalanan</div>
-                  <div class="h5 mb-0">1</div>
+                  <div class="h5 mb-0" id="statInTransit">0</div>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        <div class="card section-card mb-4" id="profile">
+        <div class="card section-card">
           <div class="card-body">
-            <h3 class="h6">Manajemen Profil</h3>
-            <ul class="mb-0">
-              <li>Edit data diri</li>
-              <li>Kelola alamat pengiriman</li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="row g-3 mb-4">
-          <div class="col-lg-6">
-            <div class="card section-card" id="order">
-              <div class="card-body">
-                <h3 class="h6">Buat Pesanan / Delivery Order</h3>
-                <ul class="mb-0">
-                  <li>Pilih produk</li>
-                  <li>Input jumlah barang</li>
-                  <li>Pilih alamat pengiriman</li>
-                  <li>Submit order</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-6">
-            <div class="card section-card" id="tracking">
-              <div class="card-body">
-                <h3 class="h6">Tracking Status Pengiriman</h3>
-                <ul class="mb-0">
-                  <li>Draft (diproses admin)</li>
-                  <li>Approved</li>
-                  <li>Packing Gudang</li>
-                  <li>Siap Kirim</li>
-                  <li>Dalam Perjalanan</li>
-                  <li>Terkirim / Gagal Kirim</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="row g-3">
-          <div class="col-lg-6">
-            <div class="card section-card" id="confirm">
-              <div class="card-body">
-                <h3 class="h6">Konfirmasi Penerimaan</h3>
-                <ul class="mb-0">
-                  <li>Upload bukti penerimaan (opsional)</li>
-                  <li>Tanda tangan digital</li>
-                  <li>Catatan penerimaan</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-6">
-            <div class="card section-card" id="history">
-              <div class="card-body">
-                <h3 class="h6">Riwayat Pesanan</h3>
-                <ul class="mb-0">
-                  <li>Lihat daftar order sebelumnya</li>
-                  <li>Detail barang yang pernah dikirim</li>
-                </ul>
-              </div>
+            <h3 class="h6 form-section-title">Akses Cepat</h3>
+            <div class="d-flex flex-wrap gap-2">
+              <a class="btn btn-outline-primary" href="customer-profile.html">Kelola Profil</a>
+              <a class="btn btn-outline-primary" href="customer-order.html">Buat Pesanan</a>
+              <a class="btn btn-outline-primary" href="customer-tracking.html">Tracking</a>
+              <a class="btn btn-outline-primary" href="customer-confirm.html">Konfirmasi</a>
+              <a class="btn btn-outline-primary" href="customer-history.html">Riwayat</a>
             </div>
           </div>
         </div>
@@ -148,12 +95,7 @@
 
   <script src="assets/js/api.js"></script>
   <script src="assets/js/guard.js"></script>
-  <script>
-    requireRole("CUSTOMER", "login-customer.html");
-    const u = JSON.parse(localStorage.getItem("user") || "{}");
-    const name = u.name || "Customer";
-    document.getElementById("greeting").textContent = name;
-    document.getElementById("customerBadge").textContent = u.email ? `${u.email}` : "Customer";
-  </script>
+  <script src="assets/js/customer-utils.js"></script>
+  <script src="assets/js/customer-dashboard.js"></script>
 </body>
 </html>
