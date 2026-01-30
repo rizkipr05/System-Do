@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Admin Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/css/dashboard-bootstrap.css" rel="stylesheet">
+</head>
+<body>
+  <div class="dashboard-shell">
+    <div class="row g-0">
+      <aside class="col-lg-3 col-xl-2 sidebar p-4">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+          <div class="brand">Dashboard</div>
+          <span class="badge-soft" id="adminBadge">Admin</span>
+        </div>
+        <nav class="nav flex-column gap-1">
+          <a class="nav-link active" href="#master">Master Data</a>
+          <a class="nav-link" href="#do">Delivery Order</a>
+          <a class="nav-link" href="#ship">Pengiriman</a>
+          <a class="nav-link" href="#report">Laporan & Cetak</a>
+          <a class="nav-link" href="#notify">Notifikasi</a>
+        </nav>
+        <div class="mt-4">
+          <button class="btn btn-dark w-100" onclick="logout('login-admin.html')">Logout</button>
+        </div>
+      </aside>
+
+      <main class="col-lg-9 col-xl-10 p-4 p-lg-5">
+        <div class="topbar mb-4">
+          <div>
+            <div class="text-muted small">Hello</div>
+            <h1 class="h4 mb-0">Halo, <span id="greeting">Admin</span> <i class="bi bi-hand-wave ms-1"></i></h1>
+          </div>
+          <div class="search-box">
+            <i class="bi bi-search text-muted"></i>
+            <input type="text" placeholder="Search">
+          </div>
+        </div>
+
+        <div class="row g-3 mb-4">
+          <div class="col-md-4">
+            <div class="card stat-card h-100">
+              <div class="card-body d-flex align-items-center gap-3">
+                <span class="stat-icon"><i class="bi bi-people"></i></span>
+                <div>
+                  <div class="text-muted small">Total Customers</div>
+                  <div class="h5 mb-0">5,423</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card stat-card h-100">
+              <div class="card-body d-flex align-items-center gap-3">
+                <span class="stat-icon"><i class="bi bi-box-seam"></i></span>
+                <div>
+                  <div class="text-muted small">DO Bulan Ini</div>
+                  <div class="h5 mb-0">1,893</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card stat-card h-100">
+              <div class="card-body d-flex align-items-center gap-3">
+                <span class="stat-icon"><i class="bi bi-truck"></i></span>
+                <div>
+                  <div class="text-muted small">Active Shipment</div>
+                  <div class="h5 mb-0">189</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card section-card mb-4" id="master">
+          <div class="card-body">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+              <div>
+                <div class="fw-semibold">Manajemen Customer</div>
+                <div class="text-muted small">Active members</div>
+              </div>
+              <div class="search-box" style="max-width: 220px;">
+                <i class="bi bi-search text-muted"></i>
+                <input type="text" placeholder="Search">
+              </div>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-light align-middle mb-0">
+                <thead>
+                  <tr>
+                    <th>Customer Name</th>
+                    <th>Company</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Jane Cooper</td>
+                    <td>Microsoft</td>
+                    <td>(225) 555-0118</td>
+                    <td>jane@microsoft.com</td>
+                    <td><span class="status-pill status-ok">Active</span></td>
+                  </tr>
+                  <tr>
+                    <td>Floyd Miles</td>
+                    <td>Yahoo</td>
+                    <td>(205) 555-0100</td>
+                    <td>floyd@yahoo.com</td>
+                    <td><span class="status-pill status-danger">Inactive</span></td>
+                  </tr>
+                  <tr>
+                    <td>Ronald Richards</td>
+                    <td>Adobe</td>
+                    <td>(302) 555-0107</td>
+                    <td>ronald@adobe.com</td>
+                    <td><span class="status-pill status-ok">Active</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="card section-card" id="do">
+          <div class="card-body">
+            <h3 class="h6">Proses Delivery Order</h3>
+            <ul class="mb-0">
+              <li>Input order manual (jika offline)</li>
+              <li>Generate nomor DO otomatis</li>
+              <li>Tambah detail item DO</li>
+              <li>Approval DO: Draft → Approved</li>
+              <li>Packing barang</li>
+              <li>Validasi stok keluar</li>
+              <li>Update status: Ready To Ship</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="row g-3 mt-4">
+          <div class="col-lg-6">
+            <div class="card section-card" id="ship">
+              <div class="card-body">
+                <h3 class="h6">Pengiriman</h3>
+                <ul class="mb-0">
+                  <li>Assign pengirim untuk DO tertentu</li>
+                  <li>Pantau status shipment</li>
+                  <li>Reschedule jika gagal kirim</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="card section-card" id="report">
+              <div class="card-body">
+                <h3 class="h6">Laporan & Cetak</h3>
+                <ul class="mb-0">
+                  <li>Laporan DO per hari/bulan</li>
+                  <li>Barang terlaris</li>
+                  <li>Customer paling aktif</li>
+                  <li>Status pengiriman</li>
+                  <li>Print DO PDF</li>
+                  <li>Surat Jalan PDF</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="card section-card" id="notify">
+              <div class="card-body">
+                <h3 class="h6">Notifikasi Otomatis</h3>
+                <ul class="mb-0">
+                  <li>DO disetujui</li>
+                  <li>Barang dikirim</li>
+                  <li>Barang sampai</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/guard.js"></script>
+  <script>
+    requireRole("ADMIN", "login-admin.html");
+    const u = JSON.parse(localStorage.getItem("user") || "{}");
+    const name = u.name || "Admin";
+    document.getElementById("greeting").textContent = name;
+    document.getElementById("adminBadge").textContent = u.email ? `${u.email}` : "Admin";
+  </script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+/opt/lampp/htdocs/DO-System/backend/src/main/java/com/doapp/auth/dto/LoginRequest.java
+/opt/lampp/htdocs/DO-System/backend/src/main/java/com/doapp/auth/AuthService.java
+/opt/lampp/htdocs/DO-System/backend/src/main/java/com/doapp/auth/dto/RegisterRequest.java
+/opt/lampp/htdocs/DO-System/backend/src/main/java/com/doapp/auth/AuthController.java
+/opt/lampp/htdocs/DO-System/backend/src/main/java/com/doapp/config/SecurityBeans.java
+/opt/lampp/htdocs/DO-System/backend/src/main/java/com/doapp/user/User.java
+/opt/lampp/htdocs/DO-System/backend/src/main/java/com/doapp/DoSystemApplication.java
+/opt/lampp/htdocs/DO-System/backend/src/main/java/com/doapp/customer/CustomerRepository.java
+/opt/lampp/htdocs/DO-System/backend/src/main/java/com/doapp/customer/Customer.java
+/opt/lampp/htdocs/DO-System/backend/src/main/java/com/doapp/auth/dto/UserDto.java
+/opt/lampp/htdocs/DO-System/backend/src/main/java/com/doapp/user/Role.java
+/opt/lampp/htdocs/DO-System/backend/src/main/java/com/doapp/config/CorsConfig.java
+/opt/lampp/htdocs/DO-System/backend/src/main/java/com/doapp/auth/dto/AuthResponse.java
+/opt/lampp/htdocs/DO-System/backend/src/main/java/com/doapp/user/UserRepository.java
+/opt/lampp/htdocs/DO-System/backend/src/main/java/com/doapp/tools/PasswordHashGenerator.java
+/opt/lampp/htdocs/DO-System/backend/src/main/java/com/doapp/auth/JwtService.java
