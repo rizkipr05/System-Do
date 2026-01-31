@@ -55,18 +55,22 @@ el("profileForm").addEventListener("submit", async (e) => {
 
 el("addressForm").addEventListener("submit", async (e) => {
   e.preventDefault();
-  const payload = {
-    id: el("addressId").value || null,
-    label: el("addressLabel").value.trim(),
-    recipientName: el("addressRecipient").value.trim(),
-    phone: el("addressPhone").value.trim(),
-    addressLine: el("addressLine").value.trim(),
-    city: el("addressCity").value.trim(),
-    province: el("addressProvince").value.trim(),
-    postalCode: el("addressPostal").value.trim(),
-    notes: el("addressNotes").value.trim(),
-    isDefault: false
-  };
+    const payload = {
+      id: el("addressId").value || null,
+      label: el("addressLabel").value.trim(),
+      recipientName: el("addressRecipient").value.trim(),
+      phone: el("addressPhone").value.trim(),
+      addressLine: el("addressLine").value.trim(),
+      city: el("addressCity").value.trim(),
+      province: el("addressProvince").value.trim(),
+      postalCode: el("addressPostal").value.trim(),
+      notes: el("addressNotes").value.trim(),
+      isDefault: false
+    };
+    if (!payload.addressLine) {
+      showAlert("addressAlert", "Alamat lengkap wajib diisi");
+      return;
+    }
   if (payload.id) {
     await putJson(`/addresses/${payload.id}`, payload);
   } else {

@@ -207,20 +207,31 @@ public class AdminController {
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer tidak ditemukan"));
     String addressLine = safe(getStr(req, "addressLine"), 255);
     if (addressLine == null)
+      addressLine = safe(getStr(req, "address"), 255);
+    if (addressLine == null)
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Alamat wajib diisi");
+    String label = safe(getStr(req, "label"), 50);
+    if (label == null) label = "Alamat Utama";
+    String recipientName = safe(getStr(req, "recipientName"), 120);
+    if (recipientName == null) recipientName = safe(c.getUser().getName(), 120);
+    String phone = safe(getStr(req, "phone"), 30);
+    if (phone == null) phone = safe(c.getUser().getPhone(), 50);
+    if (recipientName == null || phone == null)
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Nama penerima dan telepon wajib diisi");
     Address a = new Address();
     a.setCustomer(c);
-    a.setLabel(safe(getStr(req, "label"), 120));
-    a.setRecipientName(safe(getStr(req, "recipientName"), 120));
-    a.setPhone(safe(getStr(req, "phone"), 50));
+    a.setLabel(label);
+    a.setRecipientName(recipientName);
+    a.setPhone(phone);
     a.setAddressLine(addressLine);
-    a.setCity(safe(getStr(req, "city"), 120));
-    a.setProvince(safe(getStr(req, "province"), 120));
-    a.setPostalCode(safe(getStr(req, "postalCode"), 20));
+    a.setCity(safe(getStr(req, "city"), 80));
+    a.setProvince(safe(getStr(req, "province"), 80));
+    a.setPostalCode(safe(getStr(req, "postalCode"), 10));
     a.setNotes(safe(getStr(req, "notes"), 500));
     try {
       return toAddressDto(addressRepo.save(a));
     } catch (Exception ex) {
+      ex.printStackTrace();
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Gagal menyimpan alamat");
     }
   }

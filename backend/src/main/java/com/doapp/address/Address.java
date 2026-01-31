@@ -24,12 +24,16 @@ public class Address {
 
   private String label;
 
-  @Column(name = "recipient_name")
+  @Column(name = "receiver_name")
   private String recipientName;
 
+  @Column(name = "receiver_phone")
   private String phone;
 
-  @Column(name = "address_line", length = 255)
+  @Column(name = "address", columnDefinition = "TEXT")
+  private String address;
+
+  @Column(name = "address_line")
   private String addressLine;
 
   private String city;
@@ -60,8 +64,14 @@ public class Address {
   public String getPhone() { return phone; }
   public void setPhone(String phone) { this.phone = phone; }
 
-  public String getAddressLine() { return addressLine; }
-  public void setAddressLine(String addressLine) { this.addressLine = addressLine; }
+  public String getAddressLine() { return address != null ? address : addressLine; }
+  public void setAddressLine(String addressLine) {
+    this.addressLine = addressLine;
+    this.address = addressLine;
+  }
+
+  public String getAddress() { return address; }
+  public void setAddress(String address) { this.address = address; }
 
   public String getCity() { return city; }
   public void setCity(String city) { this.city = city; }
