@@ -54,4 +54,19 @@ public class AuthHelper {
     return userRepo.findById(userId)
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User tidak ditemukan"));
   }
+
+  public User requireDriver(String authHeader) {
+    if (authHeader == null || !authHeader.startsWith("Bearer "))
+      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Token tidak valid");
+
+    String token = authHeader.replace("Bearer ", "").trim();
+    Claims claims = jwtService.parse(token);
+    String role = String.valueOf(claims.get("role"));
+    if (!Role.DRIVER.name().equals(role))
+      throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Akses driver diperlukan");
+
+    Long userId = Long.parseLong(claims.getSubject());
+    return userRepo.findById(userId)
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User tidak ditemukan"));
+  }
 }

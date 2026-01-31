@@ -18,4 +18,10 @@ public interface OrderRepository extends JpaRepository<DeliveryOrder, Long> {
   List<DeliveryOrder> findAllByOrderByCreatedAtDesc();
 
   long countByCustomerIdAndStatusIn(Long customerId, Collection<OrderStatus> statuses);
+
+  @EntityGraph(attributePaths = {"items", "items.product", "address", "customer"})
+  List<DeliveryOrder> findByDriverIdOrderByCreatedAtDesc(Long driverId);
+
+  @EntityGraph(attributePaths = {"items", "items.product", "address", "customer"})
+  Optional<DeliveryOrder> findByIdAndDriverId(Long id, Long driverId);
 }

@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Update Status Pengiriman</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/css/dashboard-bootstrap.css" rel="stylesheet">
+</head>
+<body>
+  <div class="dashboard-shell">
+    <div class="row g-0">
+      <aside class="col-lg-3 col-xl-2 sidebar p-4">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+          <div class="brand">Dashboard</div>
+          <span class="badge-soft" id="driverBadge">Driver</span>
+        </div>
+        <nav class="nav flex-column gap-1">
+          <a class="nav-link" href="driver-dashboard.html">Dashboard</a>
+          <a class="nav-link" href="driver-assigned.html">DO Ditugaskan</a>
+          <a class="nav-link active" href="driver-status.html">Update Status</a>
+          <a class="nav-link" href="driver-proof.html">Bukti Serah Terima</a>
+        </nav>
+        <div class="mt-4">
+          <button class="btn btn-dark w-100" onclick="logout('login-driver.html')">Logout</button>
+        </div>
+      </aside>
+
+      <main class="col-lg-9 col-xl-10 p-4 p-lg-5">
+        <div class="topbar mb-4">
+          <div>
+            <div class="text-muted small">Hello</div>
+            <h1 class="h4 mb-0">Halo, <span id="greeting">Driver</span> <i class="bi bi-hand-wave ms-1"></i></h1>
+          </div>
+          <div class="search-box">
+            <i class="bi bi-search text-muted"></i>
+            <input type="text" placeholder="Search">
+          </div>
+        </div>
+
+        <div class="card section-card">
+          <div class="card-body">
+            <h3 class="h6 form-section-title">Update Status Pengiriman</h3>
+            <div class="alert alert-success py-2 d-none" id="statusAlert"></div>
+            <form id="statusForm" class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label">Pilih DO</label>
+                <select class="form-select" id="statusOrderSelect"></select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Status</label>
+                <select class="form-select" id="statusSelect">
+                  <option value="IN_TRANSIT">Dalam Perjalanan</option>
+                  <option value="FAILED">Gagal Kirim</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Alamat</label>
+                <div class="form-control" id="statusAddress" style="background:#f8f9fa;">-</div>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Barang</label>
+                <div class="form-control" id="statusItems" style="background:#f8f9fa;">-</div>
+              </div>
+              <div class="col-12">
+                <label class="form-label">Catatan (wajib jika gagal)</label>
+                <input class="form-control" id="statusNote" placeholder="Kendala pengiriman">
+              </div>
+              <div class="col-12">
+                <button class="btn btn-primary" type="submit">Update Status</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/guard.js"></script>
+  <script src="assets/js/driver-utils.js"></script>
+  <script src="assets/js/driver-status.js"></script>
+</body>
+</html>

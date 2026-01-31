@@ -17,9 +17,10 @@
           <span class="badge-soft" id="driverBadge">Driver</span>
         </div>
         <nav class="nav flex-column gap-1">
-          <a class="nav-link active" href="#assigned">DO Ditugaskan</a>
-          <a class="nav-link" href="#status">Update Status</a>
-          <a class="nav-link" href="#proof">Bukti Serah Terima</a>
+          <a class="nav-link active" href="driver-dashboard.html">Dashboard</a>
+          <a class="nav-link" href="driver-assigned.html">DO Ditugaskan</a>
+          <a class="nav-link" href="driver-status.html">Update Status</a>
+          <a class="nav-link" href="driver-proof.html">Bukti Serah Terima</a>
         </nav>
         <div class="mt-4">
           <button class="btn btn-dark w-100" onclick="logout('login-driver.html')">Logout</button>
@@ -45,7 +46,7 @@
                 <span class="stat-icon"><i class="bi bi-box-seam"></i></span>
                 <div>
                   <div class="text-muted small">Pengiriman Hari Ini</div>
-                  <div class="h5 mb-0">12</div>
+                  <div class="h5 mb-0" id="statToday">0</div>
                 </div>
               </div>
             </div>
@@ -56,7 +57,7 @@
                 <span class="stat-icon"><i class="bi bi-truck"></i></span>
                 <div>
                   <div class="text-muted small">Dalam Perjalanan</div>
-                  <div class="h5 mb-0">5</div>
+                  <div class="h5 mb-0" id="statTransit">0</div>
                 </div>
               </div>
             </div>
@@ -67,83 +68,20 @@
                 <span class="stat-icon"><i class="bi bi-check-circle"></i></span>
                 <div>
                   <div class="text-muted small">Selesai</div>
-                  <div class="h5 mb-0">7</div>
+                  <div class="h5 mb-0" id="statDone">0</div>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        <div class="card section-card mb-4" id="assigned">
+        <div class="card section-card">
           <div class="card-body">
-            <div class="d-flex align-items-center justify-content-between mb-3">
-              <div>
-                <div class="fw-semibold">DO Ditugaskan</div>
-                <div class="text-muted small">Daftar pengiriman hari ini</div>
-              </div>
-              <div class="search-box" style="max-width: 220px;">
-                <i class="bi bi-search text-muted"></i>
-                <input type="text" placeholder="Search">
-              </div>
-            </div>
-            <div class="table-responsive">
-              <table class="table table-light align-middle mb-0">
-                <thead>
-                  <tr>
-                    <th>No. DO</th>
-                    <th>Customer</th>
-                    <th>Alamat</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>DO-0012</td>
-                    <td>PT Maju Jaya</td>
-                    <td>Jakarta Selatan</td>
-                    <td><span class="status-pill status-warn">Dalam Perjalanan</span></td>
-                  </tr>
-                  <tr>
-                    <td>DO-0013</td>
-                    <td>CV Sukses</td>
-                    <td>Bekasi</td>
-                    <td><span class="status-pill status-ok">Terkirim</span></td>
-                  </tr>
-                  <tr>
-                    <td>DO-0014</td>
-                    <td>PT Makmur</td>
-                    <td>Tangerang</td>
-                    <td><span class="status-pill status-danger">Gagal Kirim</span></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-
-        <div class="row g-3">
-          <div class="col-lg-6">
-            <div class="card section-card" id="status">
-              <div class="card-body">
-                <h3 class="h6">Update Status Pengiriman</h3>
-                <ul class="mb-0">
-                  <li>Dalam Perjalanan</li>
-                  <li>Terkirim</li>
-                  <li>Gagal Kirim</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-6">
-            <div class="card section-card" id="proof">
-              <div class="card-body">
-                <h3 class="h6">Upload Bukti Serah Terima</h3>
-                <ul class="mb-0">
-                  <li>Foto penerimaan</li>
-                  <li>Tanda tangan customer</li>
-                  <li>Catatan jika ada masalah</li>
-                </ul>
-              </div>
+            <h3 class="h6 form-section-title">Akses Cepat</h3>
+            <div class="d-flex flex-wrap gap-2">
+              <a class="btn btn-outline-primary" href="driver-assigned.html">DO Ditugaskan</a>
+              <a class="btn btn-outline-primary" href="driver-status.html">Update Status</a>
+              <a class="btn btn-outline-primary" href="driver-proof.html">Bukti Serah Terima</a>
             </div>
           </div>
         </div>
@@ -153,12 +91,7 @@
 
   <script src="assets/js/api.js"></script>
   <script src="assets/js/guard.js"></script>
-  <script>
-    requireRole("DRIVER", "login-driver.html");
-    const u = JSON.parse(localStorage.getItem("user") || "{}");
-    const name = u.name || "Driver";
-    document.getElementById("greeting").textContent = name;
-    document.getElementById("driverBadge").textContent = u.email ? `${u.email}` : "Driver";
-  </script>
+  <script src="assets/js/driver-utils.js"></script>
+  <script src="assets/js/driver-dashboard.js"></script>
 </body>
 </html>

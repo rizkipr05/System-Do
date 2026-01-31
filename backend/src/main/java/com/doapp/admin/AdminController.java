@@ -39,7 +39,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -363,7 +362,13 @@ public class AdminController {
   public List<Map<String, Object>> drivers(@RequestHeader("Authorization") String authHeader) {
     authHelper.requireAdmin(authHeader);
     return userRepo.findByRole(Role.DRIVER).stream()
-        .map(u -> Map.of("id", u.getId(), "name", u.getName(), "email", u.getEmail()))
+        .map(u -> {
+          Map<String, Object> m = new HashMap<>();
+          m.put("id", u.getId());
+          m.put("name", u.getName());
+          m.put("email", u.getEmail());
+          return m;
+        })
         .toList();
   }
 
