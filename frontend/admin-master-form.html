@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Form Master Data</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+  <div class="container-fluid">
+    <div class="row min-vh-100">
+      <aside class="col-12 col-lg-3 col-xl-2 bg-dark text-white p-4">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+          <div class="fw-bold">Dashboard</div>
+          <span class="badge rounded-pill text-bg-secondary" id="adminBadge">Admin</span>
+        </div>
+        <nav class="nav flex-column gap-2">
+          <a class="nav-link text-white-50 px-3 py-2" href="admin-dashboard.html">Dashboard</a>
+          <a class="nav-link text-white bg-primary rounded-3 px-3 py-2" href="admin-master.html">Master Data</a>
+          <a class="nav-link text-white-50 px-3 py-2" href="admin-do.html">Delivery Order</a>
+          <a class="nav-link text-white-50 px-3 py-2" href="admin-ship.html">Pengiriman</a>
+          <a class="nav-link text-white-50 px-3 py-2" href="admin-report.html">Laporan & Cetak</a>
+          <a class="nav-link text-white-50 px-3 py-2" href="admin-notify.html">Notifikasi</a>
+        </nav>
+        <div class="mt-4">
+          <button class="btn btn-outline-light w-100" onclick="logout('login-admin.html')">Logout</button>
+        </div>
+      </aside>
+
+      <main class="col-12 col-lg-9 col-xl-10 p-4 p-lg-5">
+        <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-2 mb-3">
+          <div>
+            <h1 class="h5 mb-0">Form Master Data</h1>
+            <div class="text-muted small">Tambah atau edit customer & produk.</div>
+          </div>
+          <a class="btn btn-outline-secondary" href="admin-master.html"><i class="bi bi-arrow-left me-1"></i>Kembali</a>
+        </div>
+
+        <div class="card shadow-sm mb-4" id="customerSection">
+          <div class="card-body">
+            <h3 class="h6 fw-bold mb-3">Form Customer</h3>
+            <div class="alert alert-success py-2 d-none" id="customerAlert"></div>
+            <div class="alert alert-danger py-2 d-none" id="customerError"></div>
+            <form id="customerForm" class="row g-2">
+              <input type="hidden" id="custUserId">
+              <div class="col-md-6">
+                <input class="form-control" id="custName" placeholder="Nama" required>
+              </div>
+              <div class="col-md-6">
+                <input class="form-control" id="custEmail" placeholder="Email" required>
+              </div>
+              <div class="col-md-6">
+                <input class="form-control" id="custPhone" placeholder="Telepon">
+              </div>
+              <div class="col-md-6">
+                <input class="form-control" id="custCompany" placeholder="Perusahaan">
+              </div>
+              <div class="col-12">
+                <div class="small text-muted fw-semibold mt-1">Alamat Customer (opsional)</div>
+              </div>
+              <div class="col-md-4">
+                <input class="form-control" id="custAddrLabel" placeholder="Label (Rumah/Kantor)">
+              </div>
+              <div class="col-md-4">
+                <input class="form-control" id="custAddrRecipient" placeholder="Nama penerima">
+              </div>
+              <div class="col-md-4">
+                <input class="form-control" id="custAddrPhone" placeholder="Telepon">
+              </div>
+              <div class="col-md-8">
+                <input class="form-control" id="custAddrLine" placeholder="Alamat lengkap">
+              </div>
+              <div class="col-md-4">
+                <input class="form-control" id="custAddrCity" placeholder="Kota">
+              </div>
+              <div class="col-md-4">
+                <input class="form-control" id="custAddrProvince" placeholder="Provinsi">
+              </div>
+              <div class="col-md-4">
+                <input class="form-control" id="custAddrPostal" placeholder="Kode pos">
+              </div>
+              <div class="col-md-4">
+                <input class="form-control" id="custAddrNotes" placeholder="Catatan">
+              </div>
+              <div class="col-md-6">
+                <input type="password" class="form-control" id="custPassword" placeholder="Password (buat baru)">
+              </div>
+              <div class="col-md-6 d-flex align-items-center gap-2">
+                <input class="form-check-input" type="checkbox" id="custActive" checked>
+                <label class="form-check-label" for="custActive">Aktif</label>
+              </div>
+              <div class="col-12">
+                <button class="btn btn-primary" type="submit">Simpan Customer</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+
+        <div class="card shadow-sm" id="productSection">
+          <div class="card-body">
+            <h3 class="h6 fw-bold mb-3">Form Produk</h3>
+            <div class="alert alert-success py-2 d-none" id="productAlert"></div>
+            <form id="productForm" class="row g-2">
+              <input type="hidden" id="productId">
+              <div class="col-md-6">
+                <input class="form-control" id="productName" placeholder="Nama produk" required>
+              </div>
+              <div class="col-md-6">
+                <input class="form-control" id="productSku" placeholder="SKU">
+              </div>
+              <div class="col-md-4">
+                <input class="form-control" id="productUnit" placeholder="Satuan">
+              </div>
+              <div class="col-md-4">
+                <input type="number" class="form-control" id="productPrice" placeholder="Harga">
+              </div>
+              <div class="col-md-4">
+                <input type="number" class="form-control" id="productStock" placeholder="Stok">
+              </div>
+              <div class="col-md-6 d-flex align-items-center gap-2">
+                <input class="form-check-input" type="checkbox" id="productActive" checked>
+                <label class="form-check-label" for="productActive">Aktif</label>
+              </div>
+              <div class="col-12">
+                <button class="btn btn-primary" type="submit">Simpan Produk</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/guard.js"></script>
+  <script src="assets/js/admin-utils.js"></script>
+  <script src="assets/js/admin-master-form.js"></script>
+</body>
+</html>

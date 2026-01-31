@@ -6,186 +6,86 @@
   <title>Admin Master Data</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-  <link href="assets/css/dashboard-bootstrap.css" rel="stylesheet">
 </head>
-<body>
-  <div class="dashboard-shell">
-    <div class="row g-0">
-      <aside class="col-lg-3 col-xl-2 sidebar p-4">
+<body class="bg-light">
+  <div class="container-fluid">
+    <div class="row min-vh-100">
+      <aside class="col-12 col-lg-3 col-xl-2 bg-dark text-white p-4">
         <div class="d-flex align-items-center justify-content-between mb-4">
-          <div class="brand">Dashboard</div>
-          <span class="badge-soft" id="adminBadge">Admin</span>
+          <div class="fw-bold">Dashboard</div>
+          <span class="badge rounded-pill text-bg-secondary" id="adminBadge">Admin</span>
         </div>
-        <nav class="nav flex-column gap-1">
-          <a class="nav-link" href="admin-dashboard.html">Dashboard</a>
-          <a class="nav-link active" href="admin-master.html">Master Data</a>
-          <a class="nav-link" href="admin-do.html">Delivery Order</a>
-          <a class="nav-link" href="admin-ship.html">Pengiriman</a>
-          <a class="nav-link" href="admin-report.html">Laporan & Cetak</a>
-          <a class="nav-link" href="admin-notify.html">Notifikasi</a>
+        <nav class="nav flex-column gap-2">
+          <a class="nav-link text-white-50 px-3 py-2" href="admin-dashboard.html">Dashboard</a>
+          <a class="nav-link text-white bg-primary rounded-3 px-3 py-2" href="admin-master.html">Master Data</a>
+          <a class="nav-link text-white-50 px-3 py-2" href="admin-do.html">Delivery Order</a>
+          <a class="nav-link text-white-50 px-3 py-2" href="admin-ship.html">Pengiriman</a>
+          <a class="nav-link text-white-50 px-3 py-2" href="admin-report.html">Laporan & Cetak</a>
+          <a class="nav-link text-white-50 px-3 py-2" href="admin-notify.html">Notifikasi</a>
         </nav>
         <div class="mt-4">
-          <button class="btn btn-dark w-100" onclick="logout('login-admin.html')">Logout</button>
+          <button class="btn btn-outline-light w-100" onclick="logout('login-admin.html')">Logout</button>
         </div>
       </aside>
 
-      <main class="col-lg-9 col-xl-10 p-4 p-lg-5">
-        <div class="topbar mb-4">
+      <main class="col-12 col-lg-9 col-xl-10 p-4 p-lg-5">
+        <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-2 mb-3">
           <div>
-            <div class="text-muted small">Hello</div>
-            <h1 class="h4 mb-0">Halo, <span id="greeting">Admin</span> <i class="bi bi-hand-wave ms-1"></i></h1>
+            <h1 class="h5 mb-0">Master Data</h1>
+            <div class="text-muted small">Data customer dan produk.</div>
           </div>
-          <div class="search-box">
-            <i class="bi bi-search text-muted"></i>
-            <input type="text" placeholder="Search">
+          <div class="d-flex align-items-center gap-2">
+            <span class="badge text-bg-secondary">Total Customer: <span id="totalCustomer">0</span></span>
+            <a class="btn btn-primary" href="admin-master-form.html?tab=customer"><i class="bi bi-person-plus me-1"></i>Tambah Customer</a>
+            <a class="btn btn-outline-primary" href="admin-master-form.html?tab=product"><i class="bi bi-box-seam me-1"></i>Tambah Produk</a>
           </div>
         </div>
+        <div class="alert alert-danger d-none" id="masterError"></div>
 
-        <div class="card section-card mb-4">
+        <div class="card shadow-sm mb-4">
           <div class="card-body">
-            <h3 class="h6 form-section-title">Manajemen Customer</h3>
-            <div class="alert alert-success py-2 d-none" id="customerAlert"></div>
-            <div class="row g-3">
-              <div class="col-lg-6">
-                <form id="customerForm" class="row g-2">
-                  <input type="hidden" id="custUserId">
-                  <div class="col-md-6">
-                    <input class="form-control" id="custName" placeholder="Nama" required>
-                  </div>
-                  <div class="col-md-6">
-                    <input class="form-control" id="custEmail" placeholder="Email" required>
-                  </div>
-                  <div class="col-md-6">
-                    <input class="form-control" id="custPhone" placeholder="Telepon">
-                  </div>
-                  <div class="col-md-6">
-                    <input class="form-control" id="custCompany" placeholder="Perusahaan">
-                  </div>
-                  <div class="col-md-6">
-                    <input type="password" class="form-control" id="custPassword" placeholder="Password (buat baru)">
-                  </div>
-                  <div class="col-md-6 d-flex align-items-center">
-                    <input class="form-check-input me-2" type="checkbox" id="custActive" checked>
-                    <label class="form-check-label" for="custActive">Aktif</label>
-                  </div>
-                  <div class="col-12">
-                    <button class="btn btn-primary" type="submit">Simpan Customer</button>
-                  </div>
-                </form>
-              </div>
-              <div class="col-lg-6">
-                <div class="table-responsive">
-                  <table class="table table-light align-middle mb-0">
-                    <thead>
-                    <tr>
-                      <th>Nama</th>
-                      <th>Perusahaan</th>
-                      <th>Telepon</th>
-                      <th>Email</th>
-                      <th>Status</th>
-                      <th></th>
-                    </tr>
-                    </thead>
-                    <tbody id="customerTable"></tbody>
-                  </table>
-                </div>
-              </div>
+            <div class="d-flex align-items-center justify-content-between mb-3">
+              <h3 class="h6 fw-bold mb-0">Daftar Customer</h3>
             </div>
-            <hr class="my-4">
-            <div class="row g-3">
-              <div class="col-lg-4">
-                <label class="form-label">Pilih Customer</label>
-                <select class="form-select" id="customerSelect"></select>
-              </div>
-            </div>
-            <div class="row g-3 mt-2">
-              <div class="col-lg-6">
-                <h6 class="mb-2">Riwayat Order</h6>
-                <div class="table-responsive">
-                  <table class="table table-light align-middle mb-0">
-                    <thead>
-                    <tr>
-                      <th>ID</th>
-                      <th>DO</th>
-                      <th>Status</th>
-                      <th>Alamat</th>
-                      <th>Item</th>
-                    </tr>
-                    </thead>
-                    <tbody id="customerOrderTable"></tbody>
-                  </table>
-                </div>
-              </div>
-              <div class="col-lg-6">
-                <h6 class="mb-2">Alamat Customer</h6>
-                <div class="table-responsive">
-                  <table class="table table-light align-middle mb-0">
-                    <thead>
-                    <tr>
-                      <th>Label</th>
-                      <th>Alamat</th>
-                      <th>Kota</th>
-                      <th>Telepon</th>
-                    </tr>
-                    </thead>
-                    <tbody id="customerAddressTable"></tbody>
-                  </table>
-                </div>
-              </div>
+            <div class="table-responsive">
+              <table class="table table-striped align-middle mb-0">
+                <thead class="table-light">
+                <tr>
+                  <th>Nama</th>
+                  <th>Perusahaan</th>
+                  <th>Telepon</th>
+                  <th>Email</th>
+                  <th>Alamat</th>
+                  <th>Status</th>
+                  <th></th>
+                </tr>
+                </thead>
+                <tbody id="customerTable"></tbody>
+              </table>
             </div>
           </div>
         </div>
 
-        <div class="card section-card">
+        <div class="card shadow-sm">
           <div class="card-body">
-            <h3 class="h6 form-section-title">Manajemen Produk & Stok</h3>
-            <div class="alert alert-success py-2 d-none" id="productAlert"></div>
-            <div class="row g-3">
-              <div class="col-lg-5">
-                <form id="productForm" class="row g-2">
-                  <input type="hidden" id="productId">
-                  <div class="col-md-6">
-                    <input class="form-control" id="productName" placeholder="Nama produk" required>
-                  </div>
-                  <div class="col-md-6">
-                    <input class="form-control" id="productSku" placeholder="SKU">
-                  </div>
-                  <div class="col-md-4">
-                    <input class="form-control" id="productUnit" placeholder="Satuan">
-                  </div>
-                  <div class="col-md-4">
-                    <input type="number" class="form-control" id="productPrice" placeholder="Harga">
-                  </div>
-                  <div class="col-md-4">
-                    <input type="number" class="form-control" id="productStock" placeholder="Stok">
-                  </div>
-                  <div class="col-md-6 d-flex align-items-center">
-                    <input class="form-check-input me-2" type="checkbox" id="productActive" checked>
-                    <label class="form-check-label" for="productActive">Aktif</label>
-                  </div>
-                  <div class="col-12">
-                    <button class="btn btn-primary" type="submit">Simpan Produk</button>
-                  </div>
-                </form>
-              </div>
-              <div class="col-lg-7">
-                <div class="table-responsive">
-                  <table class="table table-light align-middle mb-0">
-                    <thead>
-                    <tr>
-                      <th>Nama</th>
-                      <th>SKU</th>
-                      <th>Satuan</th>
-                      <th>Harga</th>
-                      <th>Stok</th>
-                      <th>Status</th>
-                      <th></th>
-                    </tr>
-                    </thead>
-                    <tbody id="productTable"></tbody>
-                  </table>
-                </div>
-              </div>
+            <div class="d-flex align-items-center justify-content-between mb-3">
+              <h3 class="h6 fw-bold mb-0">Daftar Produk</h3>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-striped align-middle mb-0">
+                <thead class="table-light">
+                <tr>
+                  <th>Nama</th>
+                  <th>SKU</th>
+                  <th>Satuan</th>
+                  <th>Harga</th>
+                  <th>Stok</th>
+                  <th>Status</th>
+                  <th></th>
+                </tr>
+                </thead>
+                <tbody id="productTable"></tbody>
+              </table>
             </div>
           </div>
         </div>

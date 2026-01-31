@@ -201,14 +201,28 @@ public class AdminController {
   @PostMapping("/customers/{userId}/addresses")
   public AddressDto createAddress(@RequestHeader("Authorization") String authHeader,
                                   @PathVariable Long userId,
-                                  @RequestBody AddressDto req) {
+                                  @RequestBody Map<String, Object> req) {
     authHelper.requireAdmin(authHeader);
     Customer c = customerRepo.findByUserId(userId)
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer tidak ditemukan"));
+    String addressLine = safe(getStr(req, "addressLine"), 255);
+    if (addressLine == null)
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Alamat wajib diisi");
     Address a = new Address();
     a.setCustomer(c);
-    applyAddress(a, req);
-    return toAddressDto(addressRepo.save(a));
+    a.setLabel(safe(getStr(req, "label"), 120));
+    a.setRecipientName(safe(getStr(req, "recipientName"), 120));
+    a.setPhone(safe(getStr(req, "phone"), 50));
+    a.setAddressLine(addressLine);
+    a.setCity(safe(getStr(req, "city"), 120));
+    a.setProvince(safe(getStr(req, "province"), 120));
+    a.setPostalCode(safe(getStr(req, "postalCode"), 20));
+    a.setNotes(safe(getStr(req, "notes"), 500));
+    try {
+      return toAddressDto(addressRepo.save(a));
+    } catch (Exception ex) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Gagal menyimpan alamat");
+    }
   }
 
   @PutMapping("/addresses/{id}")
@@ -466,13 +480,28 @@ public class AdminController {
 
   private static void applyAddress(Address a, AddressDto req) {
     if (req == null) return;
-    a.setLabel(req.label());
-    a.setRecipientName(req.recipientName());
-    a.setPhone(req.phone());
-    a.setAddressLine(req.addressLine());
-    a.setCity(req.city());
-    a.setProvince(req.province());
-    a.setPostalCode(req.postalCode());
-    a.setNotes(req.notes());
+    a.setLabel(safe(req.label(), 120));
+    a.setRecipientName(safe(req.recipientName(), 120));
+    a.setPhone(safe(req.phone(), 50));
+    a.setAddressLine(safe(req.addressLine(), 255));
+    a.setCity(safe(req.city(), 120));
+    a.setProvince(safe(req.province(), 120));
+    a.setPostalCode(safe(req.postalCode(), 20));
+    a.setNotes(safe(req.notes(), 500));
+  }
+
+  private static String safe(String v, int max) {
+    if (v == null) return null;
+    String t = v.trim();
+    if (t.isEmpty()) return null;
+    return t.length() > max ? t.substring(0, max) : t;
+  }
+
+  private static String getStr(Map<String, Object> req, String key) {
+    if (req == null) return null;
+    Object v = req.get(key);
+    if (v == null) return null;
+    String s = String.valueOf(v);
+    return "null".equalsIgnoreCase(s) ? null : s;
   }
 }

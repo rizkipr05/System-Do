@@ -1,0 +1,113 @@
+:root {
+  --admin-bg: radial-gradient(circle at top left, #f6f1ff 0%, #f9fbff 45%, #eef6ff 100%);
+  --admin-ink: #1f1b2e;
+  --admin-muted: #6d6a7c;
+  --admin-accent: #3b82f6;
+  --admin-accent-2: #22c55e;
+  --admin-card: #ffffff;
+  --admin-border: rgba(31, 27, 46, 0.08);
+  --admin-shadow: 0 18px 45px rgba(31, 27, 46, 0.12);
+}
+
+body.admin-skin {
+  background: var(--admin-bg);
+  color: var(--admin-ink);
+}
+
+body.admin-skin .dashboard-shell {
+  background: transparent;
+  box-shadow: none;
+}
+
+body.admin-skin .sidebar {
+  background: #0f172a;
+  color: #e2e8f0;
+  border-right: none;
+}
+
+body.admin-skin .sidebar .brand {
+  color: #ffffff;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+body.admin-skin .badge-soft {
+  background: rgba(148, 163, 184, 0.2);
+  color: #e2e8f0;
+}
+
+body.admin-skin .sidebar .nav-link {
+  color: #cbd5f5;
+  border-radius: 14px;
+  padding: 10px 14px;
+}
+
+body.admin-skin .sidebar .nav-link.active,
+body.admin-skin .sidebar .nav-link:hover {
+  background: linear-gradient(135deg, #2563eb, #3b82f6);
+  color: #ffffff;
+}
+
+body.admin-skin .topbar {
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid var(--admin-border);
+  border-radius: 18px;
+  padding: 16px 20px;
+  box-shadow: var(--admin-shadow);
+}
+
+body.admin-skin .search-box {
+  background: #eef2ff;
+  border-radius: 12px;
+}
+
+body.admin-skin .stat-card,
+body.admin-skin .section-card {
+  background: var(--admin-card);
+  border: 1px solid var(--admin-border);
+  box-shadow: var(--admin-shadow);
+}
+
+body.admin-skin .stat-icon {
+  background: rgba(59, 130, 246, 0.12);
+  color: #2563eb;
+}
+
+body.admin-skin .section-card .form-section-title {
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+body.admin-skin .table-light {
+  background: transparent;
+}
+
+body.admin-skin .table-light th {
+  color: var(--admin-muted);
+}
+
+body.admin-skin .btn-primary {
+  background: linear-gradient(135deg, #2563eb, #3b82f6);
+  border: none;
+}
+
+body.admin-skin .btn-success {
+  background: linear-gradient(135deg, #16a34a, #22c55e);
+  border: none;
+}
+
+body.admin-skin .status-pill {
+  font-weight: 700;
+}
+
+body.admin-skin .do-sheet {
+  border-color: rgba(31, 27, 46, 0.12);
+  box-shadow: inset 0 0 0 1px rgba(31, 27, 46, 0.04);
+}
+
+@media (max-width: 991px) {
+  body.admin-skin .topbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
