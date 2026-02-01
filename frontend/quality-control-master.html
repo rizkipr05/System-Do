@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Master QAL</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+  <div class="container-fluid">
+    <div class="row min-vh-100">
+      <aside class="col-12 col-lg-3 col-xl-2 bg-dark text-white p-4">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+          <div class="fw-bold">QC Panel</div>
+          <span class="badge rounded-pill text-bg-secondary" id="adminBadge">QC</span>
+        </div>
+        <nav class="nav flex-column gap-2">
+          <a class="nav-link text-white-50 px-3 py-2" href="quality-control-dashboard.html">Dashboard</a>
+          <a class="nav-link text-white bg-primary rounded-3 px-3 py-2" href="quality-control-master.html">Master QAL</a>
+          <a class="nav-link text-white-50 px-3 py-2" href="quality-control-qal.html">Data QAL</a>
+          <a class="nav-link text-white-50 px-3 py-2" href="quality-control-qal-form.html">Input Inspection</a>
+          <a class="nav-link text-white-50 px-3 py-2" href="quality-control-report.html">Laporan QAL</a>
+        </nav>
+        <div class="mt-4">
+          <button class="btn btn-outline-light w-100" onclick="logout('login-quality-control.html')">Logout</button>
+        </div>
+      </aside>
+
+      <main class="col-12 col-lg-9 col-xl-10 p-4 p-lg-5">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+          <div>
+            <h1 class="h4 mb-1">Master QAL</h1>
+            <div class="text-muted">Kelola data SPK, QC, dan Owner.</div>
+          </div>
+        </div>
+
+        <div class="card shadow-sm mb-4">
+          <div class="card-body">
+            <h6 class="fw-bold mb-3">Master SPK</h6>
+            <div class="alert alert-danger d-none" id="spkError"></div>
+            <form id="spkForm" class="row g-3">
+              <div class="col-md-4">
+                <label class="form-label">No SPK</label>
+                <input type="text" class="form-control" id="spkNumber" required>
+              </div>
+              <div class="col-md-8">
+                <label class="form-label">Nama Pekerjaan</label>
+                <input type="text" class="form-control" id="spkJob" required>
+              </div>
+              <div class="col-12">
+                <button class="btn btn-primary" type="submit">Simpan SPK</button>
+              </div>
+            </form>
+            <div class="table-responsive mt-3">
+              <table class="table table-striped align-middle mb-0">
+                <thead class="table-light">
+                  <tr>
+                    <th>No SPK</th>
+                    <th>Nama Pekerjaan</th>
+                  </tr>
+                </thead>
+                <tbody id="spkTable"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="card shadow-sm mb-4">
+          <div class="card-body">
+            <h6 class="fw-bold mb-3">Master QC</h6>
+            <div class="alert alert-danger d-none" id="qcError"></div>
+            <form id="qcForm" class="row g-3">
+              <div class="col-md-4">
+                <label class="form-label">User QC</label>
+                <select class="form-select" id="qcUser" required></select>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">ID QC</label>
+                <input type="text" class="form-control" id="qcCode" required>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Jabatan</label>
+                <input type="text" class="form-control" id="qcPosition" required>
+              </div>
+              <div class="col-12">
+                <button class="btn btn-primary" type="submit">Simpan QC</button>
+              </div>
+            </form>
+            <div class="table-responsive mt-3">
+              <table class="table table-striped align-middle mb-0">
+                <thead class="table-light">
+                  <tr>
+                    <th>ID QC</th>
+                    <th>Nama QC</th>
+                    <th>Jabatan</th>
+                  </tr>
+                </thead>
+                <tbody id="qcTable"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <h6 class="fw-bold mb-3">Master Owner</h6>
+            <div class="alert alert-danger d-none" id="ownerError"></div>
+            <form id="ownerForm" class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label">User Owner</label>
+                <select class="form-select" id="ownerUser" required></select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">ID Owner</label>
+                <input type="text" class="form-control" id="ownerCode" required>
+              </div>
+              <div class="col-12">
+                <button class="btn btn-primary" type="submit">Simpan Owner</button>
+              </div>
+            </form>
+            <div class="table-responsive mt-3">
+              <table class="table table-striped align-middle mb-0">
+                <thead class="table-light">
+                  <tr>
+                    <th>ID Owner</th>
+                    <th>Nama Owner</th>
+                  </tr>
+                </thead>
+                <tbody id="ownerTable"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="card shadow-sm mt-4">
+          <div class="card-body">
+            <h6 class="fw-bold mb-3">Master Project Control</h6>
+            <div class="alert alert-danger d-none" id="pcError"></div>
+            <form id="pcForm" class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label">User Project Control</label>
+                <select class="form-select" id="pcUser" required></select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">ID Project Control</label>
+                <input type="text" class="form-control" id="pcCode" required>
+              </div>
+              <div class="col-12">
+                <button class="btn btn-primary" type="submit">Simpan Project Control</button>
+              </div>
+            </form>
+            <div class="table-responsive mt-3">
+              <table class="table table-striped align-middle mb-0">
+                <thead class="table-light">
+                  <tr>
+                    <th>ID Project Control</th>
+                    <th>Nama Project Control</th>
+                  </tr>
+                </thead>
+                <tbody id="pcTable"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/guard.js"></script>
+  <script src="assets/js/quality-control-utils.js"></script>
+  <script src="assets/js/quality-control-master.js"></script>
+</body>
+</html>
