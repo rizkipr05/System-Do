@@ -1,7 +1,7 @@
 package com.doapp.auth;
 
-import com.doapp.customer.Customer;
-import com.doapp.customer.CustomerRepository;
+import com.doapp.owner.Owner;
+import com.doapp.owner.OwnerRepository;
 import com.doapp.user.Role;
 import com.doapp.user.User;
 import com.doapp.user.UserRepository;
@@ -14,9 +14,9 @@ import org.springframework.web.server.ResponseStatusException;
 public class AuthHelper {
   private final JwtService jwtService;
   private final UserRepository userRepo;
-  private final CustomerRepository customerRepo;
+  private final OwnerRepository customerRepo;
 
-  public AuthHelper(JwtService jwtService, UserRepository userRepo, CustomerRepository customerRepo) {
+  public AuthHelper(JwtService jwtService, UserRepository userRepo, OwnerRepository customerRepo) {
     this.jwtService = jwtService;
     this.userRepo = userRepo;
     this.customerRepo = customerRepo;
@@ -34,13 +34,13 @@ public class AuthHelper {
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User tidak ditemukan"));
   }
 
-  public Customer requireCustomer(String authHeader) {
+  public Owner requireOwner(String authHeader) {
     User user = requireUser(authHeader);
     return customerRepo.findByUserId(user.getId())
-        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer tidak ditemukan"));
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Owner tidak ditemukan"));
   }
 
-  public User requireAdmin(String authHeader) {
+  public User requireQualityControl(String authHeader) {
     if (authHeader == null || !authHeader.startsWith("Bearer "))
       throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Token tidak valid");
 
@@ -55,7 +55,7 @@ public class AuthHelper {
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User tidak ditemukan"));
   }
 
-  public User requireDriver(String authHeader) {
+  public User requireProjectControl(String authHeader) {
     if (authHeader == null || !authHeader.startsWith("Bearer "))
       throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Token tidak valid");
 

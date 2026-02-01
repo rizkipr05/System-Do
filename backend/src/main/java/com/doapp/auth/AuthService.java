@@ -4,8 +4,8 @@ import com.doapp.auth.dto.AuthResponse;
 import com.doapp.auth.dto.LoginRequest;
 import com.doapp.auth.dto.RegisterRequest;
 import com.doapp.auth.dto.UserDto;
-import com.doapp.customer.Customer;
-import com.doapp.customer.CustomerRepository;
+import com.doapp.owner.Owner;
+import com.doapp.owner.OwnerRepository;
 import com.doapp.user.Role;
 import com.doapp.user.User;
 import com.doapp.user.UserRepository;
@@ -18,12 +18,12 @@ import org.springframework.web.server.ResponseStatusException;
 @Service
 public class AuthService {
   private final UserRepository userRepo;
-  private final CustomerRepository customerRepo;
+  private final OwnerRepository customerRepo;
   private final PasswordEncoder passwordEncoder;
   private final JwtService jwtService;
 
   public AuthService(UserRepository userRepo,
-                     CustomerRepository customerRepo,
+                     OwnerRepository customerRepo,
                      PasswordEncoder passwordEncoder,
                      JwtService jwtService) {
     this.userRepo = userRepo;
@@ -33,7 +33,7 @@ public class AuthService {
   }
 
   @Transactional
-  public void registerCustomer(RegisterRequest req) {
+  public void registerOwner(RegisterRequest req) {
     if (req.name() == null || req.name().isBlank())
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Nama wajib diisi");
 
@@ -55,9 +55,9 @@ public class AuthService {
     u.setPasswordHash(passwordEncoder.encode(req.password()));
     userRepo.save(u);
 
-    Customer c = new Customer();
+    Owner c = new Owner();
     c.setUser(u);
-    c.setCustomerCode("CUST-" + String.format("%04d", u.getId()));
+    c.setOwnerCode("CUST-" + String.format("%04d", u.getId()));
     customerRepo.save(c);
   }
 

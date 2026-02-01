@@ -8,11 +8,13 @@ import com.doapp.qal.dto.OwnerProfileDto;
 import com.doapp.qal.dto.ProjectControlProfileDto;
 import com.doapp.qal.dto.QcProfileDto;
 import com.doapp.qal.dto.SpkDto;
+import com.doapp.qal.dto.UserCreateRequest;
 import com.doapp.qal.dto.UserLiteDto;
 import com.doapp.user.Role;
 import com.doapp.user.User;
 import com.doapp.user.UserRepository;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,6 +38,7 @@ public class QalController {
   private final OwnerProfileRepository ownerProfileRepo;
   private final ProjectControlProfileRepository pcProfileRepo;
   private final UserRepository userRepo;
+  private final PasswordEncoder passwordEncoder;
 
   public QalController(AuthHelper authHelper,
                        QalRepository qalRepo,
@@ -44,7 +47,8 @@ public class QalController {
                        QcProfileRepository qcProfileRepo,
                        OwnerProfileRepository ownerProfileRepo,
                        ProjectControlProfileRepository pcProfileRepo,
-                       UserRepository userRepo) {
+                       UserRepository userRepo,
+                       PasswordEncoder passwordEncoder) {
     this.authHelper = authHelper;
     this.qalRepo = qalRepo;
     this.detailRepo = detailRepo;
@@ -53,6 +57,7 @@ public class QalController {
     this.ownerProfileRepo = ownerProfileRepo;
     this.pcProfileRepo = pcProfileRepo;
     this.userRepo = userRepo;
+    this.passwordEncoder = passwordEncoder;
   }
 
   @GetMapping
@@ -86,7 +91,7 @@ public class QalController {
   @PostMapping
   public QalDto create(@RequestHeader("Authorization") String authHeader,
                        @RequestBody QalCreateRequest req) {
-    User qc = authHelper.requireAdmin(authHeader);
+    User qc = authHelper.requireQualityControl(authHeader);
     if (req.qalNumber() == null || req.qalNumber().isBlank())
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No QAL wajib diisi");
     if (req.qalDate() == null)
@@ -171,7 +176,7 @@ public class QalController {
   @PostMapping("/{id}/sign")
   public QalDto sign(@RequestHeader("Authorization") String authHeader,
                      @PathVariable String id) {
-    User pc = authHelper.requireDriver(authHeader);
+    User pc = authHelper.requireProjectControl(authHeader);
     QalRecord qal = qalRepo.findById(id)
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "QAL tidak ditemukan"));
     if (qal.getStatus() != QalStatus.DRAFT)
@@ -194,7 +199,7 @@ public class QalController {
   @PostMapping("/{id}/approve")
   public QalDto approve(@RequestHeader("Authorization") String authHeader,
                         @PathVariable String id) {
-    User owner = authHelper.requireCustomer(authHeader).getUser();
+    User owner = authHelper.requireOwner(authHeader).getUser();
     QalRecord qal = qalRepo.findById(id)
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "QAL tidak ditemukan"));
     if (qal.getStatus() != QalStatus.SIGNED)
@@ -216,7 +221,7 @@ public class QalController {
 
   @GetMapping("/spk")
   public List<SpkDto> spkList(@RequestHeader("Authorization") String authHeader) {
-    authHelper.requireAdmin(authHeader);
+    authHelper.requireQualityControl(authHeader);
     return spkRepo.findAll().stream()
         .map(s -> new SpkDto(s.getId(), s.getSpkNumber(), s.getJobName()))
         .toList();
@@ -225,7 +230,7 @@ public class QalController {
   @PostMapping("/spk")
   public SpkDto createSpk(@RequestHeader("Authorization") String authHeader,
                           @RequestBody SpkDto req) {
-    authHelper.requireAdmin(authHeader);
+    authHelper.requireQualityControl(authHeader);
     if (req.spkNumber() == null || req.spkNumber().isBlank())
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No SPK wajib diisi");
     if (req.jobName() == null || req.jobName().isBlank())
@@ -243,7 +248,7 @@ public class QalController {
   @GetMapping("/users/{role}")
   public List<UserLiteDto> usersByRole(@RequestHeader("Authorization") String authHeader,
                                        @PathVariable String role) {
-    authHelper.requireAdmin(authHeader);
+    authHelper.requireQualityControl(authHeader);
     Role r;
     try {
       r = Role.valueOf(role.toUpperCase());
@@ -255,9 +260,31 @@ public class QalController {
         .toList();
   }
 
+  @PostMapping("/users/project-control")
+  public UserLiteDto createProjectControlUser(@RequestHeader("Authorization") String authHeader,
+                                              @RequestBody UserCreateRequest req) {
+    authHelper.requireQualityControl(authHeader);
+    if (req.name() == null || req.name().isBlank())
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Nama wajib diisi");
+    if (req.email() == null || req.email().isBlank())
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email wajib diisi");
+    if (req.password() == null || req.password().length() < 6)
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password minimal 6 karakter");
+    if (userRepo.existsByEmail(req.email().trim()))
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email sudah digunakan");
+    User user = new User();
+    user.setName(req.name().trim());
+    user.setEmail(req.email().trim());
+    user.setPhone(req.phone() == null ? null : req.phone().trim());
+    user.setRole(Role.DRIVER);
+    user.setPasswordHash(passwordEncoder.encode(req.password()));
+    userRepo.save(user);
+    return new UserLiteDto(user.getId(), user.getName(), user.getEmail(), user.getRole().name());
+  }
+
   @GetMapping("/masters/qc")
   public List<QcProfileDto> qcProfiles(@RequestHeader("Authorization") String authHeader) {
-    authHelper.requireAdmin(authHeader);
+    authHelper.requireQualityControl(authHeader);
     return qcProfileRepo.findAll().stream()
         .map(p -> new QcProfileDto(p.getId(), p.getUser().getId(), p.getUser().getName(),
             p.getUser().getEmail(), p.getQcCode(), p.getPosition()))
@@ -267,7 +294,7 @@ public class QalController {
   @PostMapping("/masters/qc")
   public QcProfileDto saveQcProfile(@RequestHeader("Authorization") String authHeader,
                                     @RequestBody QcProfileDto req) {
-    authHelper.requireAdmin(authHeader);
+    authHelper.requireQualityControl(authHeader);
     if (req.userId() == null)
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User QC wajib dipilih");
     if (req.qcCode() == null || req.qcCode().isBlank())
@@ -287,7 +314,7 @@ public class QalController {
 
   @GetMapping("/masters/owner")
   public List<OwnerProfileDto> ownerProfiles(@RequestHeader("Authorization") String authHeader) {
-    authHelper.requireAdmin(authHeader);
+    authHelper.requireQualityControl(authHeader);
     return ownerProfileRepo.findAll().stream()
         .map(p -> new OwnerProfileDto(p.getId(), p.getUser().getId(), p.getUser().getName(),
             p.getUser().getEmail(), p.getOwnerCode()))
@@ -297,7 +324,7 @@ public class QalController {
   @PostMapping("/masters/owner")
   public OwnerProfileDto saveOwnerProfile(@RequestHeader("Authorization") String authHeader,
                                           @RequestBody OwnerProfileDto req) {
-    authHelper.requireAdmin(authHeader);
+    authHelper.requireQualityControl(authHeader);
     if (req.userId() == null)
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User Owner wajib dipilih");
     if (req.ownerCode() == null || req.ownerCode().isBlank())
@@ -313,7 +340,7 @@ public class QalController {
 
   @GetMapping("/masters/pc")
   public List<ProjectControlProfileDto> pcProfiles(@RequestHeader("Authorization") String authHeader) {
-    authHelper.requireAdmin(authHeader);
+    authHelper.requireQualityControl(authHeader);
     return pcProfileRepo.findAll().stream()
         .map(p -> new ProjectControlProfileDto(p.getId(), p.getUser().getId(), p.getUser().getName(),
             p.getUser().getEmail(), p.getPcCode()))
@@ -323,7 +350,7 @@ public class QalController {
   @PostMapping("/masters/pc")
   public ProjectControlProfileDto savePcProfile(@RequestHeader("Authorization") String authHeader,
                                                 @RequestBody ProjectControlProfileDto req) {
-    authHelper.requireAdmin(authHeader);
+    authHelper.requireQualityControl(authHeader);
     if (req.userId() == null)
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User Project Control wajib dipilih");
     if (req.pcCode() == null || req.pcCode().isBlank())

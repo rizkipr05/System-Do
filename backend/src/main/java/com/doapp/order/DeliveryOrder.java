@@ -1,7 +1,7 @@
 package com.doapp.order;
 
 import com.doapp.address.Address;
-import com.doapp.customer.Customer;
+import com.doapp.owner.Owner;
 import com.doapp.user.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -33,7 +33,7 @@ public class DeliveryOrder {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "customer_id", nullable = false)
-  private Customer customer;
+  private Owner customer;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "address_id", nullable = false)
@@ -92,8 +92,8 @@ public class DeliveryOrder {
   public Long getId() { return id; }
   public void setId(Long id) { this.id = id; }
 
-  public Customer getCustomer() { return customer; }
-  public void setCustomer(Customer customer) { this.customer = customer; }
+  public Owner getOwner() { return customer; }
+  public void setOwner(Owner customer) { this.customer = customer; }
 
   public Address getAddress() { return address; }
   public void setAddress(Address address) { this.address = address; }
@@ -122,8 +122,8 @@ public class DeliveryOrder {
   public String getReceiverNote() { return receiverNote; }
   public void setReceiverNote(String receiverNote) { this.receiverNote = receiverNote; }
 
-  public User getDriver() { return driver; }
-  public void setDriver(User driver) { this.driver = driver; }
+  public User getProjectControl() { return driver; }
+  public void setProjectControl(User driver) { this.driver = driver; }
 
   public String getSignatureData() { return signatureData; }
   public void setSignatureData(String signatureData) { this.signatureData = signatureData; }

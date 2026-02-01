@@ -34,6 +34,7 @@
 /opt/lampp/htdocs/DO-System/backend/src/main/java/com/doapp/DoSystemApplication.java
 /opt/lampp/htdocs/DO-System/backend/src/main/java/com/doapp/customer/CustomerRepository.java
 /opt/lampp/htdocs/DO-System/backend/src/main/java/com/doapp/qal/dto/QalDetailDto.java
+/opt/lampp/htdocs/DO-System/backend/src/main/java/com/doapp/qal/ProfileController.java
 /opt/lampp/htdocs/DO-System/backend/src/main/java/com/doapp/user/Role.java
 /opt/lampp/htdocs/DO-System/backend/src/main/java/com/doapp/admin/dto/AssignDriverRequest.java
 /opt/lampp/htdocs/DO-System/backend/src/main/java/com/doapp/order/OrderRepository.java
@@ -60,6 +61,7 @@
 /opt/lampp/htdocs/DO-System/backend/src/main/java/com/doapp/admin/dto/AdminProductDto.java
 /opt/lampp/htdocs/DO-System/backend/src/main/java/com/doapp/address/Address.java
 /opt/lampp/htdocs/DO-System/backend/src/main/java/com/doapp/qal/QalRecord.java
+/opt/lampp/htdocs/DO-System/backend/src/main/java/com/doapp/qal/dto/ProfileDto.java
 /opt/lampp/htdocs/DO-System/backend/src/main/java/com/doapp/qal/dto/SpkDto.java
 /opt/lampp/htdocs/DO-System/backend/src/main/java/com/doapp/qal/QcProfileRepository.java
 /opt/lampp/htdocs/DO-System/backend/src/main/java/com/doapp/qal/dto/QalDto.java

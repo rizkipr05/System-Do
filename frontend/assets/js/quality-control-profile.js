@@ -14,14 +14,37 @@ async function loadProfile() {
 
 el("qcProfileForm").addEventListener("submit", async (e) => {
   e.preventDefault();
+  const pass = el("qcPassword").value.trim();
+  const pass2 = el("qcPasswordConfirm").value.trim();
+  if (pass || pass2) {
+    if (pass.length < 6) {
+      showAlert("qcProfileAlert", "Password minimal 6 karakter");
+      return;
+    }
+    if (pass !== pass2) {
+      showAlert("qcProfileAlert", "Konfirmasi password tidak sama");
+      return;
+    }
+  }
   const payload = {
     name: el("qcName").value.trim(),
+    email: el("qcEmail").value.trim(),
     phone: el("qcPhone").value.trim(),
     code: el("qcCode").value.trim(),
-    position: el("qcPosition").value.trim()
+    position: el("qcPosition").value.trim(),
+    password: pass || null
   };
   await putJson("/qal/profile/qc", payload);
   showAlert("qcProfileAlert", "Profil QC tersimpan");
+  el("qcPassword").value = "";
+  el("qcPasswordConfirm").value = "";
 });
 
-loadProfile().catch(console.error);
+const modal = document.getElementById("qcProfileModal");
+if (modal) {
+  modal.addEventListener("show.bs.modal", () => {
+    loadProfile().catch(console.error);
+  });
+} else {
+  loadProfile().catch(console.error);
+}

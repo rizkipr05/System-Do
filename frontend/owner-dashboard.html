@@ -31,6 +31,14 @@
               <div class="text-muted small">Hello</div>
               <h1 class="h4 mb-0">Halo, <span id="greeting">Owner</span> <i class="bi bi-hand-wave ms-1"></i></h1>
             </div>
+            <div class="dropdown">
+              <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                <i class="bi bi-person-circle me-1"></i> Profil
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#ownerProfileModal">Edit Profil</button></li>
+              </ul>
+            </div>
           </div>
         </div>
 
@@ -55,34 +63,6 @@
             </div>
           </div>
         </div>
-
-        <div class="card shadow-sm">
-          <div class="card-body">
-            <h3 class="h6 fw-bold mb-3">Profil Owner</h3>
-            <div class="alert alert-success d-none" id="ownerProfileAlert"></div>
-            <form id="ownerProfileForm" class="row g-3">
-              <div class="col-md-6">
-                <label class="form-label">Nama</label>
-                <input type="text" class="form-control" id="ownerName" required>
-              </div>
-              <div class="col-md-6">
-                <label class="form-label">Email</label>
-                <input type="email" class="form-control" id="ownerEmail" readonly>
-              </div>
-              <div class="col-md-6">
-                <label class="form-label">Telepon</label>
-                <input type="text" class="form-control" id="ownerPhone">
-              </div>
-              <div class="col-md-6">
-                <label class="form-label">ID Owner</label>
-                <input type="text" class="form-control" id="ownerCode" required>
-              </div>
-              <div class="col-12">
-                <button class="btn btn-primary" type="submit">Simpan Profil</button>
-              </div>
-            </form>
-          </div>
-        </div>
       </main>
     </div>
   </div>
@@ -90,7 +70,52 @@
   <script src="assets/js/api.js"></script>
   <script src="assets/js/guard.js"></script>
   <script src="assets/js/owner-utils.js"></script>
+  <div class="modal fade" id="ownerProfileModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Edit Profil Owner</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="alert alert-success d-none" id="ownerProfileAlert"></div>
+          <form id="ownerProfileForm" class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Nama</label>
+              <input type="text" class="form-control" id="ownerName" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Email</label>
+              <input type="email" class="form-control" id="ownerEmail" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Telepon</label>
+              <input type="text" class="form-control" id="ownerPhone">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Password Baru</label>
+              <input type="password" class="form-control" id="ownerPassword">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Ulangi Password</label>
+              <input type="password" class="form-control" id="ownerPasswordConfirm">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">ID Owner</label>
+              <input type="text" class="form-control" id="ownerCode" required>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+          <button class="btn btn-primary" type="submit" form="ownerProfileForm">Simpan</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script src="assets/js/owner-queue.js"></script>
   <script src="assets/js/owner-profile.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

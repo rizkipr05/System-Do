@@ -7,5 +7,6 @@ public record ProfileDto(
     String email,
     String phone,
     String code,
-    String position
+    String position,
+    String password
 ) {}
