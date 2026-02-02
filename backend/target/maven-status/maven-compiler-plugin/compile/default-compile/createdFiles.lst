@@ -1,4 +1,3 @@
-com/doapp/customer/CustomerRepository.class
 com/doapp/auth/dto/UserDto.class
 com/doapp/config/CorsConfig.class
 com/doapp/DoSystemApplication.class
@@ -8,7 +7,6 @@ com/doapp/tools/PasswordHashGenerator.class
 com/doapp/auth/dto/AuthResponse.class
 com/doapp/auth/AuthService.class
 com/doapp/user/User.class
-com/doapp/customer/Customer.class
 com/doapp/auth/dto/LoginRequest.class
 com/doapp/config/SecurityBeans.class
 com/doapp/user/UserRepository.class

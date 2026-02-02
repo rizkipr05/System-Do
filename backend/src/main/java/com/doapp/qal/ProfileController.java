@@ -66,15 +66,18 @@ public class ProfileController {
     }
     userRepo.save(user);
 
-    if (req.code() == null || req.code().isBlank())
+    QcProfile profile = qcProfileRepo.findByUserId(user.getId()).orElse(null);
+    String code = req.code() == null ? null : req.code().trim();
+    String position = req.position() == null ? null : req.position().trim();
+    if ((code == null || code.isBlank()) && profile == null)
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ID QC wajib diisi");
-    if (req.position() == null || req.position().isBlank())
+    if ((position == null || position.isBlank()) && profile == null)
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Jabatan QC wajib diisi");
 
-    QcProfile profile = qcProfileRepo.findByUserId(user.getId()).orElse(new QcProfile());
+    if (profile == null) profile = new QcProfile();
     profile.setUser(user);
-    profile.setQcCode(req.code().trim());
-    profile.setPosition(req.position().trim());
+    if (code != null && !code.isBlank()) profile.setQcCode(code);
+    if (position != null && !position.isBlank()) profile.setPosition(position);
     profile = qcProfileRepo.save(profile);
 
     return new ProfileDto("QC", user.getId(), user.getName(), user.getEmail(), user.getPhone(),
@@ -107,12 +110,14 @@ public class ProfileController {
     }
     userRepo.save(user);
 
-    if (req.code() == null || req.code().isBlank())
+    ProjectControlProfile profile = pcProfileRepo.findByUserId(user.getId()).orElse(null);
+    String code = req.code() == null ? null : req.code().trim();
+    if ((code == null || code.isBlank()) && profile == null)
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ID Project Control wajib diisi");
 
-    ProjectControlProfile profile = pcProfileRepo.findByUserId(user.getId()).orElse(new ProjectControlProfile());
+    if (profile == null) profile = new ProjectControlProfile();
     profile.setUser(user);
-    profile.setPcCode(req.code().trim());
+    if (code != null && !code.isBlank()) profile.setPcCode(code);
     profile = pcProfileRepo.save(profile);
 
     return new ProfileDto("PROJECT_CONTROL", user.getId(), user.getName(), user.getEmail(), user.getPhone(),
@@ -145,12 +150,14 @@ public class ProfileController {
     }
     userRepo.save(user);
 
-    if (req.code() == null || req.code().isBlank())
+    OwnerProfile profile = ownerProfileRepo.findByUserId(user.getId()).orElse(null);
+    String code = req.code() == null ? null : req.code().trim();
+    if ((code == null || code.isBlank()) && profile == null)
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ID Owner wajib diisi");
 
-    OwnerProfile profile = ownerProfileRepo.findByUserId(user.getId()).orElse(new OwnerProfile());
+    if (profile == null) profile = new OwnerProfile();
     profile.setUser(user);
-    profile.setOwnerCode(req.code().trim());
+    if (code != null && !code.isBlank()) profile.setOwnerCode(code);
     profile = ownerProfileRepo.save(profile);
 
     return new ProfileDto("OWNER", user.getId(), user.getName(), user.getEmail(), user.getPhone(),

@@ -1,4 +1,4 @@
-requireRole("ADMIN", "login-quality-control.html");
+requireRole("QUALITY_CONTROL", "login-quality-control.html");
 setAdminGreeting();
 
 function renderStatusChart(statusCounts) {

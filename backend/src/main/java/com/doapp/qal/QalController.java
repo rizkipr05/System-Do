@@ -63,14 +63,14 @@ public class QalController {
   @GetMapping
   public List<QalDto> list(@RequestHeader("Authorization") String authHeader) {
     User user = authHelper.requireUser(authHeader);
-    if (user.getRole() == Role.ADMIN) {
+    if (user.getRole() == Role.QUALITY_CONTROL) {
       return qalRepo.findAllByOrderByCreatedAtDesc().stream().map(this::toDto).toList();
     }
-    if (user.getRole() == Role.DRIVER) {
+    if (user.getRole() == Role.PROJECT_CONTROL) {
       return qalRepo.findByProjectControlUserIdOrderByCreatedAtDesc(user.getId())
           .stream().map(this::toDto).toList();
     }
-    if (user.getRole() == Role.CUSTOMER) {
+    if (user.getRole() == Role.OWNER) {
       return qalRepo.findByOwnerUserIdOrderByCreatedAtDesc(user.getId())
           .stream().map(this::toDto).toList();
     }
@@ -276,7 +276,7 @@ public class QalController {
     user.setName(req.name().trim());
     user.setEmail(req.email().trim());
     user.setPhone(req.phone() == null ? null : req.phone().trim());
-    user.setRole(Role.DRIVER);
+    user.setRole(Role.PROJECT_CONTROL);
     user.setPasswordHash(passwordEncoder.encode(req.password()));
     userRepo.save(user);
     return new UserLiteDto(user.getId(), user.getName(), user.getEmail(), user.getRole().name());
@@ -392,10 +392,10 @@ public class QalController {
   }
 
   private boolean canAccess(User user, QalRecord qal) {
-    if (user.getRole() == Role.ADMIN) return true;
-    if (user.getRole() == Role.DRIVER && qal.getProjectControlUser() != null)
+    if (user.getRole() == Role.QUALITY_CONTROL) return true;
+    if (user.getRole() == Role.PROJECT_CONTROL && qal.getProjectControlUser() != null)
       return qal.getProjectControlUser().getId().equals(user.getId());
-    if (user.getRole() == Role.CUSTOMER && qal.getOwnerUser() != null)
+    if (user.getRole() == Role.OWNER && qal.getOwnerUser() != null)
       return qal.getOwnerUser().getId().equals(user.getId());
     return false;
   }

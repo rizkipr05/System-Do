@@ -14,14 +14,14 @@ public interface OrderRepository extends JpaRepository<DeliveryOrder, Long> {
   @EntityGraph(attributePaths = {"items", "items.product", "address"})
   Optional<DeliveryOrder> findByIdAndOwnerId(Long id, Long customerId);
 
-  @EntityGraph(attributePaths = {"items", "items.product", "address", "customer", "driver"})
+  @EntityGraph(attributePaths = {"items", "items.product", "address", "owner", "driver"})
   List<DeliveryOrder> findAllByOrderByCreatedAtDesc();
 
   long countByOwnerIdAndStatusIn(Long customerId, Collection<OrderStatus> statuses);
 
-  @EntityGraph(attributePaths = {"items", "items.product", "address", "customer"})
-  List<DeliveryOrder> findByProjectControlIdOrderByCreatedAtDesc(Long driverId);
+  @EntityGraph(attributePaths = {"items", "items.product", "address", "owner"})
+  List<DeliveryOrder> findByDriverIdOrderByCreatedAtDesc(Long driverId);
 
-  @EntityGraph(attributePaths = {"items", "items.product", "address", "customer"})
-  Optional<DeliveryOrder> findByIdAndProjectControlId(Long id, Long driverId);
+  @EntityGraph(attributePaths = {"items", "items.product", "address", "owner"})
+  Optional<DeliveryOrder> findByIdAndDriverId(Long id, Long driverId);
 }

@@ -12,15 +12,15 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "customer_addresses")
+@Table(name = "owner_addresses")
 public class Address {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "customer_id", nullable = false)
-  private Owner customer;
+  @JoinColumn(name = "owner_id", nullable = false)
+  private Owner owner;
 
   private String label;
 
@@ -52,8 +52,8 @@ public class Address {
   public Long getId() { return id; }
   public void setId(Long id) { this.id = id; }
 
-  public Owner getOwner() { return customer; }
-  public void setOwner(Owner customer) { this.customer = customer; }
+  public Owner getOwner() { return owner; }
+  public void setOwner(Owner owner) { this.owner = owner; }
 
   public String getLabel() { return label; }
   public void setLabel(String label) { this.label = label; }

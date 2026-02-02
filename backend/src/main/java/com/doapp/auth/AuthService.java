@@ -50,7 +50,7 @@ public class AuthService {
     u.setName(req.name().trim());
     u.setEmail(req.email().trim());
     u.setPhone(req.phone() == null ? null : req.phone().trim());
-    u.setRole(Role.CUSTOMER);
+    u.setRole(Role.OWNER);
     u.setActive(true);
     u.setPasswordHash(passwordEncoder.encode(req.password()));
     userRepo.save(u);

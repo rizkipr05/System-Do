@@ -32,11 +32,11 @@ public class DeliveryOrder {
   private Long id;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "customer_id", nullable = false)
-  private Owner customer;
+  @JoinColumn(name = "owner_id", nullable = false)
+  private Owner owner;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "address_id", nullable = false)
+  @JoinColumn(name = "owner_address_id", nullable = false)
   private Address address;
 
   @Column(name = "do_number", unique = true)
@@ -92,8 +92,8 @@ public class DeliveryOrder {
   public Long getId() { return id; }
   public void setId(Long id) { this.id = id; }
 
-  public Owner getOwner() { return customer; }
-  public void setOwner(Owner customer) { this.customer = customer; }
+  public Owner getOwner() { return owner; }
+  public void setOwner(Owner owner) { this.owner = owner; }
 
   public Address getAddress() { return address; }
   public void setAddress(Address address) { this.address = address; }

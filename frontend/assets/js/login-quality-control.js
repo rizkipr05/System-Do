@@ -15,7 +15,7 @@ form.addEventListener("submit", async (e) => {
       password: password.value
     });
 
-    if (data.role !== "ADMIN") throw new Error("Akun ini bukan QC.");
+    if (data.role !== "QUALITY_CONTROL") throw new Error("Akun ini bukan QC.");
 
     setSession(data.token, data.role, data.user);
     location.href = "quality-control-dashboard.html";

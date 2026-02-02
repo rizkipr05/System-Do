@@ -1,5 +1,5 @@
 package com.doapp.user;
 
 public enum Role {
-  ADMIN, CUSTOMER, DRIVER
+  QUALITY_CONTROL, OWNER, PROJECT_CONTROL
 }

@@ -1,4 +1,4 @@
-requireRole("CUSTOMER", "login-owner.html");
+requireRole("OWNER", "login-owner.html");
 setGreeting();
 
 const el = (id) => document.getElementById(id);

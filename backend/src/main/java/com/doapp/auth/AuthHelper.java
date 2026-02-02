@@ -47,8 +47,8 @@ public class AuthHelper {
     String token = authHeader.replace("Bearer ", "").trim();
     Claims claims = jwtService.parse(token);
     String role = String.valueOf(claims.get("role"));
-    if (!Role.ADMIN.name().equals(role))
-      throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Akses admin diperlukan");
+    if (!Role.QUALITY_CONTROL.name().equals(role))
+      throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Akses QC diperlukan");
 
     Long userId = Long.parseLong(claims.getSubject());
     return userRepo.findById(userId)
@@ -62,8 +62,8 @@ public class AuthHelper {
     String token = authHeader.replace("Bearer ", "").trim();
     Claims claims = jwtService.parse(token);
     String role = String.valueOf(claims.get("role"));
-    if (!Role.DRIVER.name().equals(role))
-      throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Akses driver diperlukan");
+    if (!Role.PROJECT_CONTROL.name().equals(role))
+      throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Akses Project Control diperlukan");
 
     Long userId = Long.parseLong(claims.getSubject());
     return userRepo.findById(userId)

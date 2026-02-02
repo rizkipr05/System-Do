@@ -1,4 +1,4 @@
-requireRole("ADMIN", "login-quality-control.html");
+requireRole("QUALITY_CONTROL", "login-quality-control.html");
 setAdminGreeting();
 
 const el = (id) => document.getElementById(id);
@@ -21,8 +21,8 @@ el("addDetailBtn").addEventListener("click", () => addRow());
 addRow();
 
 async function loadUsers() {
-  const pcs = await getJson("/qal/users/DRIVER");
-  const owners = await getJson("/qal/users/CUSTOMER");
+  const pcs = await getJson("/qal/users/PROJECT_CONTROL");
+  const owners = await getJson("/qal/users/OWNER");
   el("pcUser").innerHTML = `<option value="">Pilih Project Control</option>` +
     pcs.map((u) => `<option value="${u.id}">${u.name} (${u.email})</option>`).join("");
   el("ownerUser").innerHTML = `<option value="">Pilih Owner</option>` +

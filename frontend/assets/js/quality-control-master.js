@@ -1,12 +1,12 @@
-requireRole("ADMIN", "login-quality-control.html");
+requireRole("QUALITY_CONTROL", "login-quality-control.html");
 setAdminGreeting();
 
 const el = (id) => document.getElementById(id);
 
 async function loadUsers() {
-  const qcUsers = await getJson("/qal/users/ADMIN");
-  const pcUsers = await getJson("/qal/users/DRIVER");
-  const ownerUsers = await getJson("/qal/users/CUSTOMER");
+  const qcUsers = await getJson("/qal/users/QUALITY_CONTROL");
+  const pcUsers = await getJson("/qal/users/PROJECT_CONTROL");
+  const ownerUsers = await getJson("/qal/users/OWNER");
   el("qcUser").innerHTML = qcUsers.map((u) => `<option value="${u.id}">${u.name} (${u.email})</option>`).join("");
   el("pcUser").innerHTML = pcUsers.map((u) => `<option value="${u.id}">${u.name} (${u.email})</option>`).join("");
   el("ownerUser").innerHTML = ownerUsers.map((u) => `<option value="${u.id}">${u.name} (${u.email})</option>`).join("");

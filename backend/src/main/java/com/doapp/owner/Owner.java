@@ -11,7 +11,7 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="customers")
+@Table(name="owners")
 public class Owner {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,8 +21,8 @@ public class Owner {
   @JoinColumn(name="user_id", nullable = false, unique = true)
   private User user;
 
-  @Column(name="customer_code")
-  private String customerCode;
+  @Column(name="owner_code")
+  private String ownerCode;
 
   @Column(name="company_name")
   private String companyName;
@@ -33,8 +33,8 @@ public class Owner {
   public User getUser() { return user; }
   public void setUser(User user) { this.user = user; }
 
-  public String getOwnerCode() { return customerCode; }
-  public void setOwnerCode(String customerCode) { this.customerCode = customerCode; }
+  public String getOwnerCode() { return ownerCode; }
+  public void setOwnerCode(String ownerCode) { this.ownerCode = ownerCode; }
 
   public String getCompanyName() { return companyName; }
   public void setCompanyName(String companyName) { this.companyName = companyName; }

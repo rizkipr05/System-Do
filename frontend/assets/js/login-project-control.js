@@ -15,7 +15,7 @@ form.addEventListener("submit", async (e) => {
       password: password.value
     });
 
-    if (data.role !== "DRIVER") throw new Error("Akun ini bukan Project Control.");
+    if (data.role !== "PROJECT_CONTROL") throw new Error("Akun ini bukan Project Control.");
 
     setSession(data.token, data.role, data.user);
     location.href = "project-control-dashboard.html";

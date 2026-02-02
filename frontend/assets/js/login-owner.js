@@ -15,7 +15,7 @@ form.addEventListener("submit", async (e) => {
       password: password.value
     });
 
-    if (data.role !== "CUSTOMER") throw new Error("Akun ini bukan Owner.");
+    if (data.role !== "OWNER") throw new Error("Akun ini bukan Owner.");
 
     setSession(data.token, data.role, data.user);
     location.href = "owner-dashboard.html";

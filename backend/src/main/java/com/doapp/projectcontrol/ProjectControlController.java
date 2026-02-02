@@ -36,7 +36,7 @@ public class ProjectControlController {
   @GetMapping("/summary")
   public Map<String, Long> summary(@RequestHeader("Authorization") String authHeader) {
     User driver = authHelper.requireProjectControl(authHeader);
-    List<DeliveryOrder> orders = orderRepo.findByProjectControlIdOrderByCreatedAtDesc(driver.getId());
+    List<DeliveryOrder> orders = orderRepo.findByDriverIdOrderByCreatedAtDesc(driver.getId());
     LocalDate today = LocalDate.now();
     long todayCount = orders.stream()
         .filter(o -> o.getCreatedAt() != null && o.getCreatedAt().toLocalDate().equals(today))
@@ -49,7 +49,7 @@ public class ProjectControlController {
   @GetMapping("/orders")
   public List<ProjectControlOrderDto> list(@RequestHeader("Authorization") String authHeader) {
     User driver = authHelper.requireProjectControl(authHeader);
-    return orderRepo.findByProjectControlIdOrderByCreatedAtDesc(driver.getId())
+    return orderRepo.findByDriverIdOrderByCreatedAtDesc(driver.getId())
         .stream().map(ProjectControlController::toDto).toList();
   }
 
@@ -57,7 +57,7 @@ public class ProjectControlController {
   public ProjectControlOrderDto detail(@RequestHeader("Authorization") String authHeader,
                                @PathVariable Long id) {
     User driver = authHelper.requireProjectControl(authHeader);
-    DeliveryOrder o = orderRepo.findByIdAndProjectControlId(id, driver.getId())
+    DeliveryOrder o = orderRepo.findByIdAndDriverId(id, driver.getId())
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order tidak ditemukan"));
     return toDto(o);
   }
@@ -67,7 +67,7 @@ public class ProjectControlController {
                                      @PathVariable Long id,
                                      @RequestBody ProjectControlUpdateStatusRequest req) {
     User driver = authHelper.requireProjectControl(authHeader);
-    DeliveryOrder o = orderRepo.findByIdAndProjectControlId(id, driver.getId())
+    DeliveryOrder o = orderRepo.findByIdAndDriverId(id, driver.getId())
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order tidak ditemukan"));
 
     if (req.status() == null)

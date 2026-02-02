@@ -1,4 +1,4 @@
-requireRole("DRIVER", "login-project-control.html");
+requireRole("PROJECT_CONTROL", "login-project-control.html");
 setDriverGreeting();
 
 const el = (id) => document.getElementById(id);

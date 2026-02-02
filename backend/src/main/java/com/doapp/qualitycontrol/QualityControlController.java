@@ -125,7 +125,7 @@ public class QualityControlController {
     u.setName(req.name().trim());
     u.setEmail(req.email().trim());
     u.setPhone(req.phone() == null ? null : req.phone().trim());
-    u.setRole(Role.CUSTOMER);
+    u.setRole(Role.OWNER);
     u.setActive(req.active() == null || req.active());
     u.setPasswordHash(passwordEncoder.encode(req.password()));
     userRepo.save(u);
@@ -386,7 +386,7 @@ public class QualityControlController {
   @GetMapping("/drivers")
   public List<Map<String, Object>> drivers(@RequestHeader("Authorization") String authHeader) {
     authHelper.requireQualityControl(authHeader);
-    return userRepo.findByRole(Role.DRIVER).stream()
+    return userRepo.findByRole(Role.PROJECT_CONTROL).stream()
         .map(u -> {
           Map<String, Object> m = new HashMap<>();
           m.put("id", u.getId());
