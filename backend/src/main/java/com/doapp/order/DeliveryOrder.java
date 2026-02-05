@@ -39,6 +39,24 @@ public class DeliveryOrder {
   @JoinColumn(name = "customer_address_id", nullable = false)
   private Address address;
 
+  @Column(name = "ship_to_name")
+  private String shipToName;
+
+  @Column(name = "ship_to_phone")
+  private String shipToPhone;
+
+  @Column(name = "ship_to_address", columnDefinition = "TEXT")
+  private String shipToAddress;
+
+  @Column(name = "ship_to_city")
+  private String shipToCity;
+
+  @Column(name = "ship_to_province")
+  private String shipToProvince;
+
+  @Column(name = "ship_to_postal_code")
+  private String shipToPostalCode;
+
   @Column(name = "do_number", unique = true)
   private String doNumber;
 
@@ -88,6 +106,14 @@ public class DeliveryOrder {
     if (this.orderNumber == null && this.doNumber != null) {
       this.orderNumber = this.doNumber;
     }
+    if (this.address != null) {
+      if (this.shipToName == null) this.shipToName = this.address.getRecipientName();
+      if (this.shipToPhone == null) this.shipToPhone = this.address.getPhone();
+      if (this.shipToAddress == null) this.shipToAddress = this.address.getAddressLine();
+      if (this.shipToCity == null) this.shipToCity = this.address.getCity();
+      if (this.shipToProvince == null) this.shipToProvince = this.address.getProvince();
+      if (this.shipToPostalCode == null) this.shipToPostalCode = this.address.getPostalCode();
+    }
   }
 
   @PreUpdate
@@ -102,7 +128,17 @@ public class DeliveryOrder {
   public void setCustomer(Customer customer) { this.customer = customer; }
 
   public Address getAddress() { return address; }
-  public void setAddress(Address address) { this.address = address; }
+  public void setAddress(Address address) {
+    this.address = address;
+    if (address != null) {
+      if (this.shipToName == null) this.shipToName = address.getRecipientName();
+      if (this.shipToPhone == null) this.shipToPhone = address.getPhone();
+      if (this.shipToAddress == null) this.shipToAddress = address.getAddressLine();
+      if (this.shipToCity == null) this.shipToCity = address.getCity();
+      if (this.shipToProvince == null) this.shipToProvince = address.getProvince();
+      if (this.shipToPostalCode == null) this.shipToPostalCode = address.getPostalCode();
+    }
+  }
 
   public String getDoNumber() { return doNumber; }
   public void setDoNumber(String doNumber) {
@@ -114,6 +150,24 @@ public class DeliveryOrder {
 
   public String getOrderNumber() { return orderNumber; }
   public void setOrderNumber(String orderNumber) { this.orderNumber = orderNumber; }
+
+  public String getShipToName() { return shipToName; }
+  public void setShipToName(String shipToName) { this.shipToName = shipToName; }
+
+  public String getShipToPhone() { return shipToPhone; }
+  public void setShipToPhone(String shipToPhone) { this.shipToPhone = shipToPhone; }
+
+  public String getShipToAddress() { return shipToAddress; }
+  public void setShipToAddress(String shipToAddress) { this.shipToAddress = shipToAddress; }
+
+  public String getShipToCity() { return shipToCity; }
+  public void setShipToCity(String shipToCity) { this.shipToCity = shipToCity; }
+
+  public String getShipToProvince() { return shipToProvince; }
+  public void setShipToProvince(String shipToProvince) { this.shipToProvince = shipToProvince; }
+
+  public String getShipToPostalCode() { return shipToPostalCode; }
+  public void setShipToPostalCode(String shipToPostalCode) { this.shipToPostalCode = shipToPostalCode; }
 
   public OrderStatus getStatus() { return status; }
   public void setStatus(OrderStatus status) { this.status = status; }

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Waktu pembuatan: 05 Feb 2026 pada 12.58
+-- Waktu pembuatan: 05 Feb 2026 pada 16.50
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.2.12
 
@@ -90,6 +90,13 @@ CREATE TABLE `customer_addresses` (
   `receiver_name` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data untuk tabel `customer_addresses`
+--
+
+INSERT INTO `customer_addresses` (`id`, `customer_id`, `label`, `recipient_name`, `phone`, `address_line`, `city`, `province`, `postal_code`, `notes`, `is_default`, `address`, `receiver_phone`, `receiver_name`) VALUES
+(1, 1, 's bsda', NULL, NULL, 'JL Sakura no 2 kec tanjung senang kel way kandis', 'Kota Bandar Lampung', 'Lampung', '35143', NULL, 1, 'JL Sakura no 2 kec tanjung senang kel way kandis', '088276477014', 'Muhammad Rzki Pratama');
+
 -- --------------------------------------------------------
 
 --
@@ -117,11 +124,10 @@ INSERT INTO `customer_profiles` (`id`, `customer_code`, `user_id`) VALUES
 
 CREATE TABLE `delivery_orders` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `order_number` varchar(60) NOT NULL,
   `customer_id` bigint(20) UNSIGNED NOT NULL,
-  `ship_to_name` varchar(150) NOT NULL,
+  `ship_to_name` varchar(150) DEFAULT NULL,
   `ship_to_phone` varchar(50) DEFAULT NULL,
-  `ship_to_address` text NOT NULL,
+  `ship_to_address` text DEFAULT NULL,
   `ship_to_city` varchar(100) DEFAULT NULL,
   `ship_to_province` varchar(100) DEFAULT NULL,
   `ship_to_postal_code` varchar(20) DEFAULT NULL,
@@ -146,8 +152,16 @@ CREATE TABLE `delivery_orders` (
   `signature_data` longtext DEFAULT NULL,
   `updated_at` datetime(6) DEFAULT NULL,
   `customer_address_id` bigint(20) NOT NULL,
-  `driver_id` bigint(20) DEFAULT NULL
+  `driver_id` bigint(20) DEFAULT NULL,
+  `order_number` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data untuk tabel `delivery_orders`
+--
+
+INSERT INTO `delivery_orders` (`id`, `customer_id`, `ship_to_name`, `ship_to_phone`, `ship_to_address`, `ship_to_city`, `ship_to_province`, `ship_to_postal_code`, `status`, `warehouse_status`, `shipment_status`, `order_date`, `delivery_date`, `approved_by`, `approved_at`, `assigned_driver`, `assigned_driver_id`, `assigned_at`, `notes`, `confirmed_at`, `created_at`, `do_number`, `order_note`, `proof_image_data`, `receiver_name`, `receiver_note`, `signature_data`, `updated_at`, `customer_address_id`, `driver_id`, `order_number`) VALUES
+(1, 1, NULL, NULL, NULL, NULL, NULL, NULL, 'DRAFT', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2026-02-05 22:48:14.000000', 'DO-20260205-644684', '', NULL, NULL, NULL, NULL, '2026-02-05 22:48:14.000000', 1, NULL, 'DO-20260205-644684');
 
 -- --------------------------------------------------------
 
@@ -211,6 +225,13 @@ CREATE TABLE `order_items` (
   `product_id` bigint(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data untuk tabel `order_items`
+--
+
+INSERT INTO `order_items` (`id`, `quantity`, `order_id`, `product_id`) VALUES
+(1, 1, 1, 1);
+
 -- --------------------------------------------------------
 
 --
@@ -252,6 +273,13 @@ CREATE TABLE `products` (
   `is_active` bit(1) DEFAULT NULL,
   `stock` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data untuk tabel `products`
+--
+
+INSERT INTO `products` (`id`, `sku`, `name`, `unit`, `price`, `active`, `is_active`, `stock`) VALUES
+(1, 'bhbcs', 'pensil', 'ds bds', 100000.00, 1, b'1', 211);
 
 -- --------------------------------------------------------
 
@@ -300,7 +328,8 @@ CREATE TABLE `qal_details` (
 --
 
 INSERT INTO `qal_details` (`id`, `document_name`, `document_type`, `received_date`, `verification_status`, `qal_number`) VALUES
-(1, 'bhh', 'bn', '2026-02-17', 'Disetujui', '19291');
+(1, 'bhh', 'bn', '2026-02-17', 'Disetujui', '19291'),
+(2, 'da nd', 'da bda', '2026-02-10', 'Disetujui', 'dbwdb');
 
 -- --------------------------------------------------------
 
@@ -333,6 +362,7 @@ CREATE TABLE `qal_records` (
 
 INSERT INTO `qal_records` (`qal_number`, `admin_code`, `admin_position`, `approved_at`, `created_at`, `customer_code`, `customer_name`, `driver_code`, `driver_name`, `qal_date`, `signed_at`, `status`, `admin_user_id`, `customer_user_id`, `driver_user_id`, `spk_id`) VALUES
 ('19291', 'shjcj', 'fbah', NULL, '2026-02-05 09:37:45.000000', 'ajbda', 'Customer', 'bscbs', 'Driver', '2026-02-13', NULL, 'DRAFT', 1, 3, 2, 3),
+('dbwdb', 'shjcj', 'fbah', NULL, '2026-02-05 14:23:48.000000', 'ajbda', 'Muhammad Rzki Pratama', 'bscbs', 'Driver', '2026-02-05', NULL, 'DRAFT', 1, 3, 2, 4),
 ('dw s', 'shjcj', 'fbah', NULL, '2026-02-05 09:29:39.000000', 'ajbda', 'Customer', 'bscbs', 'Driver', '2026-02-05', NULL, 'DRAFT', 1, 3, 2, 2);
 
 -- --------------------------------------------------------
@@ -368,7 +398,8 @@ CREATE TABLE `spk` (
 INSERT INTO `spk` (`id`, `created_at`, `job_name`, `spk_number`) VALUES
 (1, '2026-02-05 09:28:57.000000', 'dw', 'bwdw'),
 (2, '2026-02-05 09:29:39.000000', 'dww', '102992'),
-(3, '2026-02-05 09:37:45.000000', 'njjl', 'bb');
+(3, '2026-02-05 09:37:45.000000', 'njjl', 'bb'),
+(4, '2026-02-05 14:23:48.000000', 'dnaebdb', 'duehde');
 
 -- --------------------------------------------------------
 
@@ -452,7 +483,6 @@ ALTER TABLE `customer_profiles`
 --
 ALTER TABLE `delivery_orders`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `order_number` (`order_number`),
   ADD UNIQUE KEY `UK_bxe1y04t7n7c5f4ng4b5pohlo` (`do_number`),
   ADD KEY `fk_order_customer` (`customer_id`),
   ADD KEY `fk_order_driver` (`driver_id`);
@@ -589,7 +619,7 @@ ALTER TABLE `customers`
 -- AUTO_INCREMENT untuk tabel `customer_addresses`
 --
 ALTER TABLE `customer_addresses`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT untuk tabel `customer_profiles`
@@ -601,7 +631,7 @@ ALTER TABLE `customer_profiles`
 -- AUTO_INCREMENT untuk tabel `delivery_orders`
 --
 ALTER TABLE `delivery_orders`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT untuk tabel `delivery_order_items`
@@ -625,7 +655,7 @@ ALTER TABLE `notification_logs`
 -- AUTO_INCREMENT untuk tabel `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT untuk tabel `owners`
@@ -643,7 +673,7 @@ ALTER TABLE `owner_profiles`
 -- AUTO_INCREMENT untuk tabel `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT untuk tabel `project_control_profiles`
@@ -661,7 +691,7 @@ ALTER TABLE `proof_of_delivery`
 -- AUTO_INCREMENT untuk tabel `qal_details`
 --
 ALTER TABLE `qal_details`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT untuk tabel `qc_profiles`
@@ -673,7 +703,7 @@ ALTER TABLE `qc_profiles`
 -- AUTO_INCREMENT untuk tabel `spk`
 --
 ALTER TABLE `spk`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT untuk tabel `stocks`
