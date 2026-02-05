@@ -4,7 +4,7 @@ import com.doapp.address.Address;
 import com.doapp.address.AddressRepository;
 import com.doapp.address.dto.AddressDto;
 import com.doapp.auth.AuthHelper;
-import com.doapp.owner.Owner;
+import com.doapp.customer.Customer;
 import com.doapp.order.dto.ConfirmRequest;
 import com.doapp.order.dto.CreateOrderRequest;
 import com.doapp.order.dto.OrderDto;
@@ -44,22 +44,22 @@ public class OrderController {
 
   @GetMapping("/summary")
   public OrderSummaryDto summary(@RequestHeader("Authorization") String authHeader) {
-    Owner c = authHelper.requireOwner(authHeader);
-    long active = orderRepo.countByOwnerIdAndStatusIn(c.getId(), List.of(
+    Customer c = authHelper.requireCustomer(authHeader);
+    long active = orderRepo.countByCustomerIdAndStatusIn(c.getId(), List.of(
         OrderStatus.DRAFT, OrderStatus.APPROVED, OrderStatus.PACKING,
         OrderStatus.READY_TO_SHIP, OrderStatus.IN_TRANSIT
     ));
-    long completed = orderRepo.countByOwnerIdAndStatusIn(c.getId(), List.of(
+    long completed = orderRepo.countByCustomerIdAndStatusIn(c.getId(), List.of(
         OrderStatus.DELIVERED, OrderStatus.CONFIRMED
     ));
-    long inTransit = orderRepo.countByOwnerIdAndStatusIn(c.getId(), List.of(OrderStatus.IN_TRANSIT));
+    long inTransit = orderRepo.countByCustomerIdAndStatusIn(c.getId(), List.of(OrderStatus.IN_TRANSIT));
     return new OrderSummaryDto(active, completed, inTransit);
   }
 
   @GetMapping
   public List<OrderDto> list(@RequestHeader("Authorization") String authHeader) {
-    Owner c = authHelper.requireOwner(authHeader);
-    return orderRepo.findByOwnerIdOrderByCreatedAtDesc(c.getId())
+    Customer c = authHelper.requireCustomer(authHeader);
+    return orderRepo.findByCustomerIdOrderByCreatedAtDesc(c.getId())
         .stream()
         .map(OrderController::toDto)
         .toList();
@@ -68,8 +68,8 @@ public class OrderController {
   @GetMapping("/{id}")
   public OrderDto detail(@RequestHeader("Authorization") String authHeader,
                          @PathVariable Long id) {
-    Owner c = authHelper.requireOwner(authHeader);
-    DeliveryOrder o = orderRepo.findByIdAndOwnerId(id, c.getId())
+    Customer c = authHelper.requireCustomer(authHeader);
+    DeliveryOrder o = orderRepo.findByIdAndCustomerId(id, c.getId())
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order tidak ditemukan"));
     return toDto(o);
   }
@@ -77,7 +77,7 @@ public class OrderController {
   @PostMapping
   public OrderDto create(@RequestHeader("Authorization") String authHeader,
                          @RequestBody CreateOrderRequest req) {
-    Owner c = authHelper.requireOwner(authHeader);
+    Customer c = authHelper.requireCustomer(authHeader);
 
     if (req == null || req.items() == null || req.items().isEmpty())
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Item order wajib diisi");
@@ -85,11 +85,11 @@ public class OrderController {
     if (req.addressId() == null)
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Alamat wajib dipilih");
 
-    Address address = addressRepo.findByIdAndOwnerId(req.addressId(), c.getId())
+    Address address = addressRepo.findByIdAndCustomerId(req.addressId(), c.getId())
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Alamat tidak valid"));
 
     DeliveryOrder o = new DeliveryOrder();
-    o.setOwner(c);
+    o.setCustomer(c);
     o.setAddress(address);
     o.setStatus(OrderStatus.DRAFT);
     o.setNote(req.note());
@@ -116,8 +116,8 @@ public class OrderController {
   public OrderDto confirm(@RequestHeader("Authorization") String authHeader,
                           @PathVariable Long id,
                           @RequestBody ConfirmRequest req) {
-    Owner c = authHelper.requireOwner(authHeader);
-    DeliveryOrder o = orderRepo.findByIdAndOwnerId(id, c.getId())
+    Customer c = authHelper.requireCustomer(authHeader);
+    DeliveryOrder o = orderRepo.findByIdAndCustomerId(id, c.getId())
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order tidak ditemukan"));
 
     if (o.getStatus() != OrderStatus.DELIVERED)

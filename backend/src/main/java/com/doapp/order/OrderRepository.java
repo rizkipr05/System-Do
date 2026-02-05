@@ -9,19 +9,19 @@ import java.util.Optional;
 
 public interface OrderRepository extends JpaRepository<DeliveryOrder, Long> {
   @EntityGraph(attributePaths = {"items", "items.product", "address"})
-  List<DeliveryOrder> findByOwnerIdOrderByCreatedAtDesc(Long customerId);
+  List<DeliveryOrder> findByCustomerIdOrderByCreatedAtDesc(Long customerId);
 
   @EntityGraph(attributePaths = {"items", "items.product", "address"})
-  Optional<DeliveryOrder> findByIdAndOwnerId(Long id, Long customerId);
+  Optional<DeliveryOrder> findByIdAndCustomerId(Long id, Long customerId);
 
-  @EntityGraph(attributePaths = {"items", "items.product", "address", "owner", "driver"})
+  @EntityGraph(attributePaths = {"items", "items.product", "address", "customer", "driver"})
   List<DeliveryOrder> findAllByOrderByCreatedAtDesc();
 
-  long countByOwnerIdAndStatusIn(Long customerId, Collection<OrderStatus> statuses);
+  long countByCustomerIdAndStatusIn(Long customerId, Collection<OrderStatus> statuses);
 
-  @EntityGraph(attributePaths = {"items", "items.product", "address", "owner"})
+  @EntityGraph(attributePaths = {"items", "items.product", "address", "customer"})
   List<DeliveryOrder> findByDriverIdOrderByCreatedAtDesc(Long driverId);
 
-  @EntityGraph(attributePaths = {"items", "items.product", "address", "owner"})
+  @EntityGraph(attributePaths = {"items", "items.product", "address", "customer"})
   Optional<DeliveryOrder> findByIdAndDriverId(Long id, Long driverId);
 }

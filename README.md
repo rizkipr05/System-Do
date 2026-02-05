@@ -32,9 +32,9 @@ Backend berjalan di `http://localhost:8081`.
 ## Menjalankan Frontend
 Frontend bersifat statis. Buka file HTML langsung di browser atau lewat server lokal.
 Contoh halaman utama:
-- `frontend/login-customer.html`
-- `frontend/login-admin.html`
-- `frontend/login-driver.html`
+- `frontend/login-admin.html` (Admin)
+- `frontend/login-customer.html` (Customer)
+- `frontend/login-driver.html` (Driver)
 
 ## Akun & Role
 Role yang tersedia:
@@ -72,6 +72,7 @@ Base URL: `http://localhost:8081/api`
 - Produk harus diisi dulu agar customer bisa membuat order.
 - Stok akan berkurang saat status DO diubah ke `READY_TO_SHIP`.
 - Notifikasi admin masih simulasi (belum integrasi email/WA).
+- Perubahan role & nama tabel/kolom (Admin/Customer/Driver) bersifat breaking. Untuk database lama, lakukan migrasi data/rename kolom atau drop & recreate schema.
 
 ## Lisensi
 Internal / private project.

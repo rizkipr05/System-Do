@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface QalRepository extends JpaRepository<QalRecord, String> {
-  List<QalRecord> findByProjectControlUserIdOrderByCreatedAtDesc(Long userId);
-  List<QalRecord> findByOwnerUserIdOrderByCreatedAtDesc(Long userId);
+  List<QalRecord> findByDriverUserIdOrderByCreatedAtDesc(Long userId);
+  List<QalRecord> findByCustomerUserIdOrderByCreatedAtDesc(Long userId);
   List<QalRecord> findAllByOrderByCreatedAtDesc();
   Optional<QalRecord> findByQalNumber(String qalNumber);
 }

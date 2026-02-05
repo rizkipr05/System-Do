@@ -2,7 +2,7 @@ package com.doapp.address;
 
 import com.doapp.address.dto.AddressDto;
 import com.doapp.auth.AuthHelper;
-import com.doapp.owner.Owner;
+import com.doapp.customer.Customer;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,8 +31,8 @@ public class AddressController {
 
   @GetMapping
   public List<AddressDto> list(@RequestHeader("Authorization") String authHeader) {
-    Owner c = authHelper.requireOwner(authHeader);
-    return addressRepo.findByOwnerIdOrderByIsDefaultDescIdDesc(c.getId())
+    Customer c = authHelper.requireCustomer(authHeader);
+    return addressRepo.findByCustomerIdOrderByIsDefaultDescIdDesc(c.getId())
         .stream()
         .map(AddressController::toDto)
         .toList();
@@ -41,7 +41,7 @@ public class AddressController {
   @PostMapping
   public AddressDto create(@RequestHeader("Authorization") String authHeader,
                            @RequestBody Map<String, Object> req) {
-    Owner c = authHelper.requireOwner(authHeader);
+    Customer c = authHelper.requireCustomer(authHeader);
     String addressLine = safe(getStr(req, "addressLine"), 255);
     if (addressLine == null)
       addressLine = safe(getStr(req, "address"), 255);
@@ -56,14 +56,14 @@ public class AddressController {
     if (recipientName == null || phone == null)
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Nama penerima dan telepon wajib diisi");
     Address a = new Address();
-    a.setOwner(c);
+    a.setCustomer(c);
     applyMap(a, req);
     a.setLabel(label);
     a.setRecipientName(recipientName);
     a.setPhone(phone);
     a.setAddressLine(addressLine);
 
-    if (addressRepo.findByOwnerIdOrderByIsDefaultDescIdDesc(c.getId()).isEmpty())
+    if (addressRepo.findByCustomerIdOrderByIsDefaultDescIdDesc(c.getId()).isEmpty())
       a.setDefault(true);
 
     try {
@@ -78,8 +78,8 @@ public class AddressController {
   public AddressDto update(@RequestHeader("Authorization") String authHeader,
                            @PathVariable Long id,
                            @RequestBody Map<String, Object> req) {
-    Owner c = authHelper.requireOwner(authHeader);
-    Address a = addressRepo.findByIdAndOwnerId(id, c.getId())
+    Customer c = authHelper.requireCustomer(authHeader);
+    Address a = addressRepo.findByIdAndCustomerId(id, c.getId())
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Alamat tidak ditemukan"));
     String addressLine = safe(getStr(req, "addressLine"), 255);
     if (addressLine == null)
@@ -109,8 +109,8 @@ public class AddressController {
   @DeleteMapping("/{id}")
   public void delete(@RequestHeader("Authorization") String authHeader,
                      @PathVariable Long id) {
-    Owner c = authHelper.requireOwner(authHeader);
-    Address a = addressRepo.findByIdAndOwnerId(id, c.getId())
+    Customer c = authHelper.requireCustomer(authHeader);
+    Address a = addressRepo.findByIdAndCustomerId(id, c.getId())
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Alamat tidak ditemukan"));
     addressRepo.delete(a);
   }
@@ -118,8 +118,8 @@ public class AddressController {
   @PostMapping("/{id}/default")
   public AddressDto setDefault(@RequestHeader("Authorization") String authHeader,
                                @PathVariable Long id) {
-    Owner c = authHelper.requireOwner(authHeader);
-    List<Address> addresses = addressRepo.findByOwnerIdOrderByIsDefaultDescIdDesc(c.getId());
+    Customer c = authHelper.requireCustomer(authHeader);
+    List<Address> addresses = addressRepo.findByCustomerIdOrderByIsDefaultDescIdDesc(c.getId());
     Address selected = addresses.stream().filter(a -> a.getId().equals(id)).findFirst()
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Alamat tidak ditemukan"));
 

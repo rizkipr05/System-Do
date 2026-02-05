@@ -8,7 +8,7 @@ public record QalCreateRequest(
     LocalDate qalDate,
     String spkNumber,
     String jobName,
-    Long projectControlUserId,
-    Long ownerUserId,
+    Long driverUserId,
+    Long customerUserId,
     List<QalDetailDto> details
 ) {}

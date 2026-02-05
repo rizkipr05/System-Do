@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Login Customer</title>
+  <link rel="stylesheet" href="assets/css/auth.css"/>
+</head>
+<body>
+  <div class="card">
+    <span class="badge">CUSTOMER</span>
+    <h1>Login Customer</h1>
+    <p>Masuk untuk ACC Laporan Pendataan QAL.</p>
+
+    <form id="form" class="form">
+      <div class="field">
+        <label>Email</label>
+        <input id="email" type="email" required />
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input id="password" type="password" required />
+      </div>
+
+      <button id="btn" class="btn" type="submit">Masuk</button>
+      <div id="error" class="error"></div>
+
+      <div class="row">
+        <a class="link" href="register-customer.html">Register Customer</a>
+        <a class="link" href="login-admin.html">Login Admin</a>
+      </div>
+    </form>
+  </div>
+
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/login-customer.js"></script>
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Konfirmasi Penerimaan</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+  <div class="container-fluid">
+    <div class="row min-vh-100">
+      <aside class="col-12 col-lg-3 col-xl-2 bg-dark text-white p-4">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+          <div class="fw-bold">Dashboard</div>
+          <span class="badge rounded-pill text-bg-secondary" id="customerBadge">Customer</span>
+        </div>
+        <nav class="nav flex-column gap-2">
+          <a class="nav-link text-white-50 px-3 py-2" href="customer-dashboard.html">Dashboard</a>
+          <a class="nav-link text-white-50 px-3 py-2" href="customer-profile.html">Profil & Alamat</a>
+          <a class="nav-link text-white-50 px-3 py-2" href="customer-order.html">Buat Pesanan</a>
+          <a class="nav-link text-white-50 px-3 py-2" href="customer-tracking.html">Tracking Pengiriman</a>
+          <a class="nav-link text-white bg-primary rounded-3 px-3 py-2" href="customer-confirm.html">Konfirmasi Penerimaan</a>
+          <a class="nav-link text-white-50 px-3 py-2" href="customer-history.html">Riwayat Pesanan</a>
+        </nav>
+        <div class="mt-4">
+          <button class="btn btn-outline-light w-100" onclick="logout('login-customer.html')">Logout</button>
+        </div>
+      </aside>
+
+      <main class="col-12 col-lg-9 col-xl-10 p-4 p-lg-5">
+        <div class="card shadow-sm mb-4">
+          <div class="card-body d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3">
+            <div>
+              <div class="text-muted small">Hello</div>
+              <h1 class="h4 mb-0">Halo, <span id="greeting">Customer</span> <i class="bi bi-hand-wave ms-1"></i></h1>
+            </div>
+            <div class="input-group" style="max-width: 280px;">
+              <span class="input-group-text"><i class="bi bi-search"></i></span>
+              <input type="text" class="form-control" placeholder="Search">
+            </div>
+          </div>
+        </div>
+
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <h3 class="h6 fw-bold mb-3">Konfirmasi Penerimaan</h3>
+            <div class="alert alert-success py-2 d-none" id="confirmAlert"></div>
+            <div class="row g-3">
+              <div class="col-lg-6">
+                <label class="form-label">Pilih Order Terkirim</label>
+                <select class="form-select" id="confirmOrderSelect"></select>
+              </div>
+              <div class="col-lg-6">
+                <label class="form-label">Nama Penerima</label>
+                <input type="text" class="form-control" id="confirmReceiver" placeholder="Nama penerima">
+              </div>
+              <div class="col-lg-12">
+                <label class="form-label">Catatan Penerimaan</label>
+                <input type="text" class="form-control" id="confirmNote" placeholder="Opsional">
+              </div>
+              <div class="col-lg-6">
+                <label class="form-label">Upload Bukti (opsional)</label>
+                <input type="file" class="form-control" id="confirmProof" accept="image/*">
+              </div>
+              <div class="col-lg-6">
+                <label class="form-label">Tanda Tangan Digital</label>
+                <canvas class="border rounded w-100" id="signatureCanvas" height="160"></canvas>
+                <div class="mt-2 d-flex gap-2">
+                  <button class="btn btn-outline-secondary btn-sm" id="clearSignatureBtn">Bersihkan</button>
+                  <button class="btn btn-primary btn-sm" id="submitConfirmBtn">Kirim Konfirmasi</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/guard.js"></script>
+  <script src="assets/js/customer-utils.js"></script>
+  <script src="assets/js/customer-confirm.js"></script>
+</body>
+</html>

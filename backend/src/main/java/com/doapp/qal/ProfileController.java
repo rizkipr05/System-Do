@@ -19,39 +19,39 @@ import org.springframework.web.server.ResponseStatusException;
 public class ProfileController {
   private final AuthHelper authHelper;
   private final UserRepository userRepo;
-  private final QcProfileRepository qcProfileRepo;
-  private final OwnerProfileRepository ownerProfileRepo;
-  private final ProjectControlProfileRepository pcProfileRepo;
+  private final AdminProfileRepository adminProfileRepo;
+  private final CustomerProfileRepository customerProfileRepo;
+  private final DriverProfileRepository driverProfileRepo;
   private final PasswordEncoder passwordEncoder;
 
   public ProfileController(AuthHelper authHelper,
                            UserRepository userRepo,
-                           QcProfileRepository qcProfileRepo,
-                           OwnerProfileRepository ownerProfileRepo,
-                           ProjectControlProfileRepository pcProfileRepo,
+                           AdminProfileRepository adminProfileRepo,
+                           CustomerProfileRepository customerProfileRepo,
+                           DriverProfileRepository driverProfileRepo,
                            PasswordEncoder passwordEncoder) {
     this.authHelper = authHelper;
     this.userRepo = userRepo;
-    this.qcProfileRepo = qcProfileRepo;
-    this.ownerProfileRepo = ownerProfileRepo;
-    this.pcProfileRepo = pcProfileRepo;
+    this.adminProfileRepo = adminProfileRepo;
+    this.customerProfileRepo = customerProfileRepo;
+    this.driverProfileRepo = driverProfileRepo;
     this.passwordEncoder = passwordEncoder;
   }
 
-  @GetMapping("/qc")
-  public ProfileDto getQc(@RequestHeader("Authorization") String authHeader) {
-    User user = authHelper.requireQualityControl(authHeader);
-    QcProfile profile = qcProfileRepo.findByUserId(user.getId()).orElse(null);
-    return new ProfileDto("QC", user.getId(), user.getName(), user.getEmail(), user.getPhone(),
-        profile == null ? null : profile.getQcCode(),
+  @GetMapping("/admin")
+  public ProfileDto getAdmin(@RequestHeader("Authorization") String authHeader) {
+    User user = authHelper.requireAdmin(authHeader);
+    AdminProfile profile = adminProfileRepo.findByUserId(user.getId()).orElse(null);
+    return new ProfileDto("ADMIN", user.getId(), user.getName(), user.getEmail(), user.getPhone(),
+        profile == null ? null : profile.getAdminCode(),
         profile == null ? null : profile.getPosition(),
         null);
   }
 
-  @PutMapping("/qc")
-  public ProfileDto updateQc(@RequestHeader("Authorization") String authHeader,
+  @PutMapping("/admin")
+  public ProfileDto updateAdmin(@RequestHeader("Authorization") String authHeader,
                              @RequestBody ProfileDto req) {
-    User user = authHelper.requireQualityControl(authHeader);
+    User user = authHelper.requireAdmin(authHeader);
     if (req.name() != null && !req.name().isBlank()) user.setName(req.name().trim());
     if (req.email() != null && !req.email().isBlank() && !req.email().equalsIgnoreCase(user.getEmail())) {
       if (userRepo.existsByEmail(req.email().trim()))
@@ -66,36 +66,36 @@ public class ProfileController {
     }
     userRepo.save(user);
 
-    QcProfile profile = qcProfileRepo.findByUserId(user.getId()).orElse(null);
+    AdminProfile profile = adminProfileRepo.findByUserId(user.getId()).orElse(null);
     String code = req.code() == null ? null : req.code().trim();
     String position = req.position() == null ? null : req.position().trim();
     if ((code == null || code.isBlank()) && profile == null)
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ID QC wajib diisi");
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ID Admin wajib diisi");
     if ((position == null || position.isBlank()) && profile == null)
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Jabatan QC wajib diisi");
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Jabatan Admin wajib diisi");
 
-    if (profile == null) profile = new QcProfile();
+    if (profile == null) profile = new AdminProfile();
     profile.setUser(user);
-    if (code != null && !code.isBlank()) profile.setQcCode(code);
+    if (code != null && !code.isBlank()) profile.setAdminCode(code);
     if (position != null && !position.isBlank()) profile.setPosition(position);
-    profile = qcProfileRepo.save(profile);
+    profile = adminProfileRepo.save(profile);
 
-    return new ProfileDto("QC", user.getId(), user.getName(), user.getEmail(), user.getPhone(),
-        profile.getQcCode(), profile.getPosition(), null);
+    return new ProfileDto("ADMIN", user.getId(), user.getName(), user.getEmail(), user.getPhone(),
+        profile.getAdminCode(), profile.getPosition(), null);
   }
 
-  @GetMapping("/pc")
-  public ProfileDto getPc(@RequestHeader("Authorization") String authHeader) {
-    User user = authHelper.requireProjectControl(authHeader);
-    ProjectControlProfile profile = pcProfileRepo.findByUserId(user.getId()).orElse(null);
-    return new ProfileDto("PROJECT_CONTROL", user.getId(), user.getName(), user.getEmail(), user.getPhone(),
-        profile == null ? null : profile.getPcCode(), null, null);
+  @GetMapping("/driver")
+  public ProfileDto getDriver(@RequestHeader("Authorization") String authHeader) {
+    User user = authHelper.requireDriver(authHeader);
+    DriverProfile profile = driverProfileRepo.findByUserId(user.getId()).orElse(null);
+    return new ProfileDto("DRIVER", user.getId(), user.getName(), user.getEmail(), user.getPhone(),
+        profile == null ? null : profile.getDriverCode(), null, null);
   }
 
-  @PutMapping("/pc")
-  public ProfileDto updatePc(@RequestHeader("Authorization") String authHeader,
-                             @RequestBody ProfileDto req) {
-    User user = authHelper.requireProjectControl(authHeader);
+  @PutMapping("/driver")
+  public ProfileDto updateDriver(@RequestHeader("Authorization") String authHeader,
+                                 @RequestBody ProfileDto req) {
+    User user = authHelper.requireDriver(authHeader);
     if (req.name() != null && !req.name().isBlank()) user.setName(req.name().trim());
     if (req.email() != null && !req.email().isBlank() && !req.email().equalsIgnoreCase(user.getEmail())) {
       if (userRepo.existsByEmail(req.email().trim()))
@@ -110,32 +110,32 @@ public class ProfileController {
     }
     userRepo.save(user);
 
-    ProjectControlProfile profile = pcProfileRepo.findByUserId(user.getId()).orElse(null);
+    DriverProfile profile = driverProfileRepo.findByUserId(user.getId()).orElse(null);
     String code = req.code() == null ? null : req.code().trim();
     if ((code == null || code.isBlank()) && profile == null)
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ID Project Control wajib diisi");
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ID Driver wajib diisi");
 
-    if (profile == null) profile = new ProjectControlProfile();
+    if (profile == null) profile = new DriverProfile();
     profile.setUser(user);
-    if (code != null && !code.isBlank()) profile.setPcCode(code);
-    profile = pcProfileRepo.save(profile);
+    if (code != null && !code.isBlank()) profile.setDriverCode(code);
+    profile = driverProfileRepo.save(profile);
 
-    return new ProfileDto("PROJECT_CONTROL", user.getId(), user.getName(), user.getEmail(), user.getPhone(),
-        profile.getPcCode(), null, null);
+    return new ProfileDto("DRIVER", user.getId(), user.getName(), user.getEmail(), user.getPhone(),
+        profile.getDriverCode(), null, null);
   }
 
-  @GetMapping("/owner")
-  public ProfileDto getOwner(@RequestHeader("Authorization") String authHeader) {
-    User user = authHelper.requireOwner(authHeader).getUser();
-    OwnerProfile profile = ownerProfileRepo.findByUserId(user.getId()).orElse(null);
-    return new ProfileDto("OWNER", user.getId(), user.getName(), user.getEmail(), user.getPhone(),
-        profile == null ? null : profile.getOwnerCode(), null, null);
+  @GetMapping("/customer")
+  public ProfileDto getCustomer(@RequestHeader("Authorization") String authHeader) {
+    User user = authHelper.requireCustomer(authHeader).getUser();
+    CustomerProfile profile = customerProfileRepo.findByUserId(user.getId()).orElse(null);
+    return new ProfileDto("CUSTOMER", user.getId(), user.getName(), user.getEmail(), user.getPhone(),
+        profile == null ? null : profile.getCustomerCode(), null, null);
   }
 
-  @PutMapping("/owner")
-  public ProfileDto updateOwner(@RequestHeader("Authorization") String authHeader,
+  @PutMapping("/customer")
+  public ProfileDto updateCustomer(@RequestHeader("Authorization") String authHeader,
                                 @RequestBody ProfileDto req) {
-    User user = authHelper.requireOwner(authHeader).getUser();
+    User user = authHelper.requireCustomer(authHeader).getUser();
     if (req.name() != null && !req.name().isBlank()) user.setName(req.name().trim());
     if (req.email() != null && !req.email().isBlank() && !req.email().equalsIgnoreCase(user.getEmail())) {
       if (userRepo.existsByEmail(req.email().trim()))
@@ -150,17 +150,17 @@ public class ProfileController {
     }
     userRepo.save(user);
 
-    OwnerProfile profile = ownerProfileRepo.findByUserId(user.getId()).orElse(null);
+    CustomerProfile profile = customerProfileRepo.findByUserId(user.getId()).orElse(null);
     String code = req.code() == null ? null : req.code().trim();
     if ((code == null || code.isBlank()) && profile == null)
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ID Owner wajib diisi");
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ID Customer wajib diisi");
 
-    if (profile == null) profile = new OwnerProfile();
+    if (profile == null) profile = new CustomerProfile();
     profile.setUser(user);
-    if (code != null && !code.isBlank()) profile.setOwnerCode(code);
-    profile = ownerProfileRepo.save(profile);
+    if (code != null && !code.isBlank()) profile.setCustomerCode(code);
+    profile = customerProfileRepo.save(profile);
 
-    return new ProfileDto("OWNER", user.getId(), user.getName(), user.getEmail(), user.getPhone(),
-        profile.getOwnerCode(), null, null);
+    return new ProfileDto("CUSTOMER", user.getId(), user.getName(), user.getEmail(), user.getPhone(),
+        profile.getCustomerCode(), null, null);
   }
 }

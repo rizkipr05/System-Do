@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Admin Pengiriman</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+  <div class="container-fluid">
+    <div class="row min-vh-100">
+      <aside class="col-12 col-lg-3 col-xl-2 bg-dark text-white p-4">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+          <div class="fw-bold">Dashboard</div>
+          <span class="badge rounded-pill text-bg-secondary" id="adminBadge">Admin</span>
+        </div>
+        <nav class="nav flex-column gap-2">
+          <a class="nav-link text-white-50 px-3 py-2" href="admin-dashboard.html">Dashboard</a>
+          <a class="nav-link text-white-50 px-3 py-2" href="admin-master.html">Master Data</a>
+          <a class="nav-link text-white-50 px-3 py-2" href="admin-master-form.html">Produk & Customer</a>
+          <a class="nav-link text-white-50 px-3 py-2" href="admin-qal.html">Data QAL</a>
+          <a class="nav-link text-white-50 px-3 py-2" href="admin-qal-form.html">Input Inspection</a>
+          <a class="nav-link text-white bg-primary rounded-3 px-3 py-2" href="admin-ship.html">Pengiriman</a>
+          <a class="nav-link text-white-50 px-3 py-2" href="admin-report.html">Laporan & Cetak</a>
+          <a class="nav-link text-white-50 px-3 py-2" href="admin-notify.html">Notifikasi</a>
+        </nav>
+        <div class="mt-4">
+          <button class="btn btn-outline-light w-100" onclick="logout('login-admin.html')">Logout</button>
+        </div>
+      </aside>
+
+      <main class="col-12 col-lg-9 col-xl-10 p-4 p-lg-5">
+        <div class="mb-3">
+          <h1 class="h5 mb-0">Pengiriman</h1>
+          <div class="text-muted small">Assign driver dan monitor status pengiriman.</div>
+        </div>
+
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <h3 class="h6 fw-bold mb-3">Monitoring & Assign Pengirim</h3>
+            <div class="alert alert-success py-2 d-none" id="shipAlert"></div>
+            <div class="table-responsive">
+              <table class="table table-striped align-middle mb-0">
+                <thead class="table-light">
+                <tr>
+                  <th>ID</th>
+                  <th>Nomor DO</th>
+                  <th>Customer</th>
+                  <th>Status</th>
+                  <th>Driver</th>
+                  <th>Alamat</th>
+                  <th></th>
+                </tr>
+                </thead>
+                <tbody id="shipTable"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/guard.js"></script>
+  <script src="assets/js/admin-utils.js"></script>
+  <script src="assets/js/admin-ship.js"></script>
+</body>
+</html>

@@ -1,6 +1,6 @@
 package com.doapp.address;
 
-import com.doapp.owner.Owner;
+import com.doapp.customer.Customer;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -12,15 +12,15 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "owner_addresses")
+@Table(name = "customer_addresses")
 public class Address {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "owner_id", nullable = false)
-  private Owner owner;
+  @JoinColumn(name = "customer_id", nullable = false)
+  private Customer customer;
 
   private String label;
 
@@ -52,8 +52,8 @@ public class Address {
   public Long getId() { return id; }
   public void setId(Long id) { this.id = id; }
 
-  public Owner getOwner() { return owner; }
-  public void setOwner(Owner owner) { this.owner = owner; }
+  public Customer getCustomer() { return customer; }
+  public void setCustomer(Customer customer) { this.customer = customer; }
 
   public String getLabel() { return label; }
   public void setLabel(String label) { this.label = label; }

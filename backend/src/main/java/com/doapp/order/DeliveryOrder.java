@@ -1,7 +1,7 @@
 package com.doapp.order;
 
 import com.doapp.address.Address;
-import com.doapp.owner.Owner;
+import com.doapp.customer.Customer;
 import com.doapp.user.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -32,11 +32,11 @@ public class DeliveryOrder {
   private Long id;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "owner_id", nullable = false)
-  private Owner owner;
+  @JoinColumn(name = "customer_id", nullable = false)
+  private Customer customer;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "owner_address_id", nullable = false)
+  @JoinColumn(name = "customer_address_id", nullable = false)
   private Address address;
 
   @Column(name = "do_number", unique = true)
@@ -92,8 +92,8 @@ public class DeliveryOrder {
   public Long getId() { return id; }
   public void setId(Long id) { this.id = id; }
 
-  public Owner getOwner() { return owner; }
-  public void setOwner(Owner owner) { this.owner = owner; }
+  public Customer getCustomer() { return customer; }
+  public void setCustomer(Customer customer) { this.customer = customer; }
 
   public Address getAddress() { return address; }
   public void setAddress(Address address) { this.address = address; }
@@ -122,8 +122,8 @@ public class DeliveryOrder {
   public String getReceiverNote() { return receiverNote; }
   public void setReceiverNote(String receiverNote) { this.receiverNote = receiverNote; }
 
-  public User getProjectControl() { return driver; }
-  public void setProjectControl(User driver) { this.driver = driver; }
+  public User getDriver() { return driver; }
+  public void setDriver(User driver) { this.driver = driver; }
 
   public String getSignatureData() { return signatureData; }
   public void setSignatureData(String signatureData) { this.signatureData = signatureData; }

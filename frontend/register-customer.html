@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Register Customer</title>
+  <link rel="stylesheet" href="assets/css/auth.css"/>
+</head>
+<body>
+  <div class="card">
+    <span class="badge">CUSTOMER</span>
+    <h1>Register Customer</h1>
+    <p>Buat akun untuk proses persetujuan QAL.</p>
+
+    <form id="form" class="form">
+      <div class="field">
+        <label>Nama</label>
+        <input id="name" required />
+      </div>
+      <div class="field">
+        <label>Email</label>
+        <input id="email" type="email" required />
+      </div>
+      <div class="field">
+        <label>No HP</label>
+        <input id="phone" />
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input id="password" type="password" minlength="6" required />
+      </div>
+
+      <button id="btn" class="btn" type="submit">Daftar</button>
+      <div id="error" class="error"></div>
+
+      <div class="row">
+        <a class="link" href="login-customer.html">Sudah punya akun? Login</a>
+      </div>
+    </form>
+  </div>
+
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/register-customer.js"></script>
+</body>
+</html>

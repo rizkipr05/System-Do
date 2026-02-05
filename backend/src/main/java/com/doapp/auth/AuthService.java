@@ -4,8 +4,8 @@ import com.doapp.auth.dto.AuthResponse;
 import com.doapp.auth.dto.LoginRequest;
 import com.doapp.auth.dto.RegisterRequest;
 import com.doapp.auth.dto.UserDto;
-import com.doapp.owner.Owner;
-import com.doapp.owner.OwnerRepository;
+import com.doapp.customer.Customer;
+import com.doapp.customer.CustomerRepository;
 import com.doapp.user.Role;
 import com.doapp.user.User;
 import com.doapp.user.UserRepository;
@@ -18,12 +18,12 @@ import org.springframework.web.server.ResponseStatusException;
 @Service
 public class AuthService {
   private final UserRepository userRepo;
-  private final OwnerRepository customerRepo;
+  private final CustomerRepository customerRepo;
   private final PasswordEncoder passwordEncoder;
   private final JwtService jwtService;
 
   public AuthService(UserRepository userRepo,
-                     OwnerRepository customerRepo,
+                     CustomerRepository customerRepo,
                      PasswordEncoder passwordEncoder,
                      JwtService jwtService) {
     this.userRepo = userRepo;
@@ -33,7 +33,7 @@ public class AuthService {
   }
 
   @Transactional
-  public void registerOwner(RegisterRequest req) {
+  public void registerCustomer(RegisterRequest req) {
     if (req.name() == null || req.name().isBlank())
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Nama wajib diisi");
 
@@ -50,14 +50,14 @@ public class AuthService {
     u.setName(req.name().trim());
     u.setEmail(req.email().trim());
     u.setPhone(req.phone() == null ? null : req.phone().trim());
-    u.setRole(Role.OWNER);
+    u.setRole(Role.CUSTOMER);
     u.setActive(true);
     u.setPasswordHash(passwordEncoder.encode(req.password()));
     userRepo.save(u);
 
-    Owner c = new Owner();
+    Customer c = new Customer();
     c.setUser(u);
-    c.setOwnerCode("CUST-" + String.format("%04d", u.getId()));
+    c.setCustomerCode("CUST-" + String.format("%04d", u.getId()));
     customerRepo.save(c);
   }
 
@@ -71,9 +71,10 @@ public class AuthService {
     if (!passwordEncoder.matches(req.password(), u.getPasswordHash()))
       throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Email/Password salah");
 
-    String token = jwtService.generate(u.getId(), u.getRole().name(), u.getEmail());
+    String roleName = u.getRole().name();
+    String token = jwtService.generate(u.getId(), roleName, u.getEmail());
 
-    UserDto userDto = new UserDto(u.getId(), u.getName(), u.getEmail(), u.getRole().name());
-    return new AuthResponse(token, u.getRole().name(), userDto);
+    UserDto userDto = new UserDto(u.getId(), u.getName(), u.getEmail(), roleName);
+    return new AuthResponse(token, roleName, userDto);
   }
 }

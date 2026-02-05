@@ -29,34 +29,34 @@ public class QalRecord {
   private Spk spk;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "qc_user_id", nullable = false)
-  private User qcUser;
+  @JoinColumn(name = "admin_user_id", nullable = false)
+  private User adminUser;
 
-  @Column(name = "qc_code", length = 30)
-  private String qcCode;
+  @Column(name = "admin_code", length = 30)
+  private String adminCode;
 
-  @Column(name = "qc_position", length = 100)
-  private String qcPosition;
-
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "project_control_user_id")
-  private User projectControlUser;
-
-  @Column(name = "project_control_code", length = 30)
-  private String projectControlCode;
-
-  @Column(name = "project_control_name", length = 120)
-  private String projectControlName;
+  @Column(name = "admin_position", length = 100)
+  private String adminPosition;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "owner_user_id")
-  private User ownerUser;
+  @JoinColumn(name = "driver_user_id")
+  private User driverUser;
 
-  @Column(name = "owner_code", length = 30)
-  private String ownerCode;
+  @Column(name = "driver_code", length = 30)
+  private String driverCode;
 
-  @Column(name = "owner_name", length = 120)
-  private String ownerName;
+  @Column(name = "driver_name", length = 120)
+  private String driverName;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "customer_user_id")
+  private User customerUser;
+
+  @Column(name = "customer_code", length = 30)
+  private String customerCode;
+
+  @Column(name = "customer_name", length = 120)
+  private String customerName;
 
   @Enumerated(EnumType.STRING)
   @Column(name = "status", nullable = false, length = 20)
@@ -80,32 +80,32 @@ public class QalRecord {
   public Spk getSpk() { return spk; }
   public void setSpk(Spk spk) { this.spk = spk; }
 
-  public User getQcUser() { return qcUser; }
-  public void setQcUser(User qcUser) { this.qcUser = qcUser; }
+  public User getAdminUser() { return adminUser; }
+  public void setAdminUser(User adminUser) { this.adminUser = adminUser; }
 
-  public String getQcCode() { return qcCode; }
-  public void setQcCode(String qcCode) { this.qcCode = qcCode; }
+  public String getAdminCode() { return adminCode; }
+  public void setAdminCode(String adminCode) { this.adminCode = adminCode; }
 
-  public String getQcPosition() { return qcPosition; }
-  public void setQcPosition(String qcPosition) { this.qcPosition = qcPosition; }
+  public String getAdminPosition() { return adminPosition; }
+  public void setAdminPosition(String adminPosition) { this.adminPosition = adminPosition; }
 
-  public User getProjectControlUser() { return projectControlUser; }
-  public void setProjectControlUser(User projectControlUser) { this.projectControlUser = projectControlUser; }
+  public User getDriverUser() { return driverUser; }
+  public void setDriverUser(User driverUser) { this.driverUser = driverUser; }
 
-  public String getProjectControlCode() { return projectControlCode; }
-  public void setProjectControlCode(String projectControlCode) { this.projectControlCode = projectControlCode; }
+  public String getDriverCode() { return driverCode; }
+  public void setDriverCode(String driverCode) { this.driverCode = driverCode; }
 
-  public String getProjectControlName() { return projectControlName; }
-  public void setProjectControlName(String projectControlName) { this.projectControlName = projectControlName; }
+  public String getDriverName() { return driverName; }
+  public void setDriverName(String driverName) { this.driverName = driverName; }
 
-  public User getOwnerUser() { return ownerUser; }
-  public void setOwnerUser(User ownerUser) { this.ownerUser = ownerUser; }
+  public User getCustomerUser() { return customerUser; }
+  public void setCustomerUser(User customerUser) { this.customerUser = customerUser; }
 
-  public String getOwnerCode() { return ownerCode; }
-  public void setOwnerCode(String ownerCode) { this.ownerCode = ownerCode; }
+  public String getCustomerCode() { return customerCode; }
+  public void setCustomerCode(String customerCode) { this.customerCode = customerCode; }
 
-  public String getOwnerName() { return ownerName; }
-  public void setOwnerName(String ownerName) { this.ownerName = ownerName; }
+  public String getCustomerName() { return customerName; }
+  public void setCustomerName(String customerName) { this.customerName = customerName; }
 
   public QalStatus getStatus() { return status; }
   public void setStatus(QalStatus status) { this.status = status; }

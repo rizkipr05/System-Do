@@ -4,9 +4,9 @@ import com.doapp.auth.AuthHelper;
 import com.doapp.qal.dto.QalCreateRequest;
 import com.doapp.qal.dto.QalDetailDto;
 import com.doapp.qal.dto.QalDto;
-import com.doapp.qal.dto.OwnerProfileDto;
-import com.doapp.qal.dto.ProjectControlProfileDto;
-import com.doapp.qal.dto.QcProfileDto;
+import com.doapp.qal.dto.CustomerProfileDto;
+import com.doapp.qal.dto.DriverProfileDto;
+import com.doapp.qal.dto.AdminProfileDto;
 import com.doapp.qal.dto.SpkDto;
 import com.doapp.qal.dto.UserCreateRequest;
 import com.doapp.qal.dto.UserLiteDto;
@@ -34,9 +34,9 @@ public class QalController {
   private final QalRepository qalRepo;
   private final QalDetailRepository detailRepo;
   private final SpkRepository spkRepo;
-  private final QcProfileRepository qcProfileRepo;
-  private final OwnerProfileRepository ownerProfileRepo;
-  private final ProjectControlProfileRepository pcProfileRepo;
+  private final AdminProfileRepository adminProfileRepo;
+  private final CustomerProfileRepository customerProfileRepo;
+  private final DriverProfileRepository driverProfileRepo;
   private final UserRepository userRepo;
   private final PasswordEncoder passwordEncoder;
 
@@ -44,18 +44,18 @@ public class QalController {
                        QalRepository qalRepo,
                        QalDetailRepository detailRepo,
                        SpkRepository spkRepo,
-                       QcProfileRepository qcProfileRepo,
-                       OwnerProfileRepository ownerProfileRepo,
-                       ProjectControlProfileRepository pcProfileRepo,
+                       AdminProfileRepository adminProfileRepo,
+                       CustomerProfileRepository customerProfileRepo,
+                       DriverProfileRepository driverProfileRepo,
                        UserRepository userRepo,
                        PasswordEncoder passwordEncoder) {
     this.authHelper = authHelper;
     this.qalRepo = qalRepo;
     this.detailRepo = detailRepo;
     this.spkRepo = spkRepo;
-    this.qcProfileRepo = qcProfileRepo;
-    this.ownerProfileRepo = ownerProfileRepo;
-    this.pcProfileRepo = pcProfileRepo;
+    this.adminProfileRepo = adminProfileRepo;
+    this.customerProfileRepo = customerProfileRepo;
+    this.driverProfileRepo = driverProfileRepo;
     this.userRepo = userRepo;
     this.passwordEncoder = passwordEncoder;
   }
@@ -63,15 +63,15 @@ public class QalController {
   @GetMapping
   public List<QalDto> list(@RequestHeader("Authorization") String authHeader) {
     User user = authHelper.requireUser(authHeader);
-    if (user.getRole() == Role.QUALITY_CONTROL) {
+    if (user.getRole() == Role.ADMIN) {
       return qalRepo.findAllByOrderByCreatedAtDesc().stream().map(this::toDto).toList();
     }
-    if (user.getRole() == Role.PROJECT_CONTROL) {
-      return qalRepo.findByProjectControlUserIdOrderByCreatedAtDesc(user.getId())
+    if (user.getRole() == Role.DRIVER) {
+      return qalRepo.findByDriverUserIdOrderByCreatedAtDesc(user.getId())
           .stream().map(this::toDto).toList();
     }
-    if (user.getRole() == Role.OWNER) {
-      return qalRepo.findByOwnerUserIdOrderByCreatedAtDesc(user.getId())
+    if (user.getRole() == Role.CUSTOMER) {
+      return qalRepo.findByCustomerUserIdOrderByCreatedAtDesc(user.getId())
           .stream().map(this::toDto).toList();
     }
     throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Akses tidak diizinkan");
@@ -91,7 +91,7 @@ public class QalController {
   @PostMapping
   public QalDto create(@RequestHeader("Authorization") String authHeader,
                        @RequestBody QalCreateRequest req) {
-    User qc = authHelper.requireQualityControl(authHeader);
+    User admin = authHelper.requireAdmin(authHeader);
     if (req.qalNumber() == null || req.qalNumber().isBlank())
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No QAL wajib diisi");
     if (req.qalDate() == null)
@@ -113,31 +113,31 @@ public class QalController {
           return spkRepo.save(s);
         });
 
-    QcProfile qcProfile = qcProfileRepo.findByUserId(qc.getId()).orElse(null);
-    if (qcProfile == null) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Profil QC belum diisi");
+    AdminProfile adminProfile = adminProfileRepo.findByUserId(admin.getId()).orElse(null);
+    if (adminProfile == null) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Profil Admin belum diisi");
     }
 
-    User pc = null;
-    ProjectControlProfile pcProfile = null;
-    if (req.projectControlUserId() != null) {
-      pc = userRepo.findById(req.projectControlUserId())
-          .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Project Control tidak ditemukan"));
-      pcProfile = pcProfileRepo.findByUserId(pc.getId()).orElse(null);
-      if (pcProfile == null) {
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Profil Project Control belum diisi");
+    User driver = null;
+    DriverProfile driverProfile = null;
+    if (req.driverUserId() != null) {
+      driver = userRepo.findById(req.driverUserId())
+          .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Driver tidak ditemukan"));
+      driverProfile = driverProfileRepo.findByUserId(driver.getId()).orElse(null);
+      if (driverProfile == null) {
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Profil Driver belum diisi");
       }
     }
-    User owner = null;
-    if (req.ownerUserId() != null) {
-      owner = userRepo.findById(req.ownerUserId())
-          .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Owner tidak ditemukan"));
+    User customer = null;
+    if (req.customerUserId() != null) {
+      customer = userRepo.findById(req.customerUserId())
+          .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer tidak ditemukan"));
     }
-    OwnerProfile ownerProfile = null;
-    if (owner != null) {
-      ownerProfile = ownerProfileRepo.findByUserId(owner.getId()).orElse(null);
-      if (ownerProfile == null) {
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Profil Owner belum diisi");
+    CustomerProfile customerProfile = null;
+    if (customer != null) {
+      customerProfile = customerProfileRepo.findByUserId(customer.getId()).orElse(null);
+      if (customerProfile == null) {
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Profil Customer belum diisi");
       }
     }
 
@@ -145,15 +145,15 @@ public class QalController {
     qal.setQalNumber(qalNumber);
     qal.setQalDate(req.qalDate());
     qal.setSpk(spk);
-    qal.setQcUser(qc);
-    qal.setQcCode(qcProfile.getQcCode());
-    qal.setQcPosition(qcProfile.getPosition());
-    qal.setProjectControlUser(pc);
-    qal.setProjectControlCode(pcProfile == null ? null : pcProfile.getPcCode());
-    qal.setProjectControlName(pc == null ? null : pc.getName());
-    qal.setOwnerUser(owner);
-    qal.setOwnerCode(ownerProfile == null ? null : ownerProfile.getOwnerCode());
-    qal.setOwnerName(owner == null ? null : owner.getName());
+    qal.setAdminUser(admin);
+    qal.setAdminCode(adminProfile.getAdminCode());
+    qal.setAdminPosition(adminProfile.getPosition());
+    qal.setDriverUser(driver);
+    qal.setDriverCode(driverProfile == null ? null : driverProfile.getDriverCode());
+    qal.setDriverName(driver == null ? null : driver.getName());
+    qal.setCustomerUser(customer);
+    qal.setCustomerCode(customerProfile == null ? null : customerProfile.getCustomerCode());
+    qal.setCustomerName(customer == null ? null : customer.getName());
     qal.setStatus(QalStatus.DRAFT);
     qal = qalRepo.save(qal);
 
@@ -176,20 +176,20 @@ public class QalController {
   @PostMapping("/{id}/sign")
   public QalDto sign(@RequestHeader("Authorization") String authHeader,
                      @PathVariable String id) {
-    User pc = authHelper.requireProjectControl(authHeader);
+    User driver = authHelper.requireDriver(authHeader);
     QalRecord qal = qalRepo.findById(id)
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "QAL tidak ditemukan"));
     if (qal.getStatus() != QalStatus.DRAFT)
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Status tidak valid untuk TTD");
-    if (qal.getProjectControlUser() == null) {
-      qal.setProjectControlUser(pc);
-      ProjectControlProfile pcProfile = pcProfileRepo.findByUserId(pc.getId()).orElse(null);
-      if (pcProfile != null) {
-        qal.setProjectControlCode(pcProfile.getPcCode());
+    if (qal.getDriverUser() == null) {
+      qal.setDriverUser(driver);
+      DriverProfile driverProfile = driverProfileRepo.findByUserId(driver.getId()).orElse(null);
+      if (driverProfile != null) {
+        qal.setDriverCode(driverProfile.getDriverCode());
       }
-      qal.setProjectControlName(pc.getName());
-    } else if (!qal.getProjectControlUser().getId().equals(pc.getId())) {
-      throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Bukan Project Control terkait");
+      qal.setDriverName(driver.getName());
+    } else if (!qal.getDriverUser().getId().equals(driver.getId())) {
+      throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Bukan Driver terkait");
     }
     qal.setStatus(QalStatus.SIGNED);
     qal.setSignedAt(Instant.now());
@@ -199,20 +199,20 @@ public class QalController {
   @PostMapping("/{id}/approve")
   public QalDto approve(@RequestHeader("Authorization") String authHeader,
                         @PathVariable String id) {
-    User owner = authHelper.requireOwner(authHeader).getUser();
+    User customer = authHelper.requireCustomer(authHeader).getUser();
     QalRecord qal = qalRepo.findById(id)
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "QAL tidak ditemukan"));
     if (qal.getStatus() != QalStatus.SIGNED)
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Status tidak valid untuk ACC");
-    if (qal.getOwnerUser() == null) {
-      qal.setOwnerUser(owner);
-      OwnerProfile ownerProfile = ownerProfileRepo.findByUserId(owner.getId()).orElse(null);
-      if (ownerProfile != null) {
-        qal.setOwnerCode(ownerProfile.getOwnerCode());
+    if (qal.getCustomerUser() == null) {
+      qal.setCustomerUser(customer);
+      CustomerProfile customerProfile = customerProfileRepo.findByUserId(customer.getId()).orElse(null);
+      if (customerProfile != null) {
+        qal.setCustomerCode(customerProfile.getCustomerCode());
       }
-      qal.setOwnerName(owner.getName());
-    } else if (!qal.getOwnerUser().getId().equals(owner.getId())) {
-      throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Bukan Owner terkait");
+      qal.setCustomerName(customer.getName());
+    } else if (!qal.getCustomerUser().getId().equals(customer.getId())) {
+      throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Bukan Customer terkait");
     }
     qal.setStatus(QalStatus.APPROVED);
     qal.setApprovedAt(Instant.now());
@@ -221,7 +221,7 @@ public class QalController {
 
   @GetMapping("/spk")
   public List<SpkDto> spkList(@RequestHeader("Authorization") String authHeader) {
-    authHelper.requireQualityControl(authHeader);
+    authHelper.requireAdmin(authHeader);
     return spkRepo.findAll().stream()
         .map(s -> new SpkDto(s.getId(), s.getSpkNumber(), s.getJobName()))
         .toList();
@@ -230,7 +230,7 @@ public class QalController {
   @PostMapping("/spk")
   public SpkDto createSpk(@RequestHeader("Authorization") String authHeader,
                           @RequestBody SpkDto req) {
-    authHelper.requireQualityControl(authHeader);
+    authHelper.requireAdmin(authHeader);
     if (req.spkNumber() == null || req.spkNumber().isBlank())
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No SPK wajib diisi");
     if (req.jobName() == null || req.jobName().isBlank())
@@ -248,7 +248,7 @@ public class QalController {
   @GetMapping("/users/{role}")
   public List<UserLiteDto> usersByRole(@RequestHeader("Authorization") String authHeader,
                                        @PathVariable String role) {
-    authHelper.requireQualityControl(authHeader);
+    authHelper.requireAdmin(authHeader);
     Role r;
     try {
       r = Role.valueOf(role.toUpperCase());
@@ -260,10 +260,10 @@ public class QalController {
         .toList();
   }
 
-  @PostMapping("/users/project-control")
-  public UserLiteDto createProjectControlUser(@RequestHeader("Authorization") String authHeader,
+  @PostMapping("/users/driver")
+  public UserLiteDto createDriverUser(@RequestHeader("Authorization") String authHeader,
                                               @RequestBody UserCreateRequest req) {
-    authHelper.requireQualityControl(authHeader);
+    authHelper.requireAdmin(authHeader);
     if (req.name() == null || req.name().isBlank())
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Nama wajib diisi");
     if (req.email() == null || req.email().isBlank())
@@ -276,92 +276,92 @@ public class QalController {
     user.setName(req.name().trim());
     user.setEmail(req.email().trim());
     user.setPhone(req.phone() == null ? null : req.phone().trim());
-    user.setRole(Role.PROJECT_CONTROL);
+    user.setRole(Role.DRIVER);
     user.setPasswordHash(passwordEncoder.encode(req.password()));
     userRepo.save(user);
     return new UserLiteDto(user.getId(), user.getName(), user.getEmail(), user.getRole().name());
   }
 
-  @GetMapping("/masters/qc")
-  public List<QcProfileDto> qcProfiles(@RequestHeader("Authorization") String authHeader) {
-    authHelper.requireQualityControl(authHeader);
-    return qcProfileRepo.findAll().stream()
-        .map(p -> new QcProfileDto(p.getId(), p.getUser().getId(), p.getUser().getName(),
-            p.getUser().getEmail(), p.getQcCode(), p.getPosition()))
+  @GetMapping("/masters/admin")
+  public List<AdminProfileDto> adminProfiles(@RequestHeader("Authorization") String authHeader) {
+    authHelper.requireAdmin(authHeader);
+    return adminProfileRepo.findAll().stream()
+        .map(p -> new AdminProfileDto(p.getId(), p.getUser().getId(), p.getUser().getName(),
+            p.getUser().getEmail(), p.getAdminCode(), p.getPosition()))
         .toList();
   }
 
-  @PostMapping("/masters/qc")
-  public QcProfileDto saveQcProfile(@RequestHeader("Authorization") String authHeader,
-                                    @RequestBody QcProfileDto req) {
-    authHelper.requireQualityControl(authHeader);
+  @PostMapping("/masters/admin")
+  public AdminProfileDto saveAdminProfile(@RequestHeader("Authorization") String authHeader,
+                                    @RequestBody AdminProfileDto req) {
+    authHelper.requireAdmin(authHeader);
     if (req.userId() == null)
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User QC wajib dipilih");
-    if (req.qcCode() == null || req.qcCode().isBlank())
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ID QC wajib diisi");
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User Admin wajib dipilih");
+    if (req.adminCode() == null || req.adminCode().isBlank())
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ID Admin wajib diisi");
     if (req.position() == null || req.position().isBlank())
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Jabatan QC wajib diisi");
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Jabatan Admin wajib diisi");
     User user = userRepo.findById(req.userId())
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User tidak ditemukan"));
-    QcProfile profile = qcProfileRepo.findByUserId(user.getId()).orElse(new QcProfile());
+    AdminProfile profile = adminProfileRepo.findByUserId(user.getId()).orElse(new AdminProfile());
     profile.setUser(user);
-    profile.setQcCode(req.qcCode().trim());
+    profile.setAdminCode(req.adminCode().trim());
     profile.setPosition(req.position().trim());
-    profile = qcProfileRepo.save(profile);
-    return new QcProfileDto(profile.getId(), user.getId(), user.getName(), user.getEmail(),
-        profile.getQcCode(), profile.getPosition());
+    profile = adminProfileRepo.save(profile);
+    return new AdminProfileDto(profile.getId(), user.getId(), user.getName(), user.getEmail(),
+        profile.getAdminCode(), profile.getPosition());
   }
 
-  @GetMapping("/masters/owner")
-  public List<OwnerProfileDto> ownerProfiles(@RequestHeader("Authorization") String authHeader) {
-    authHelper.requireQualityControl(authHeader);
-    return ownerProfileRepo.findAll().stream()
-        .map(p -> new OwnerProfileDto(p.getId(), p.getUser().getId(), p.getUser().getName(),
-            p.getUser().getEmail(), p.getOwnerCode()))
+  @GetMapping("/masters/customer")
+  public List<CustomerProfileDto> customerProfiles(@RequestHeader("Authorization") String authHeader) {
+    authHelper.requireAdmin(authHeader);
+    return customerProfileRepo.findAll().stream()
+        .map(p -> new CustomerProfileDto(p.getId(), p.getUser().getId(), p.getUser().getName(),
+            p.getUser().getEmail(), p.getCustomerCode()))
         .toList();
   }
 
-  @PostMapping("/masters/owner")
-  public OwnerProfileDto saveOwnerProfile(@RequestHeader("Authorization") String authHeader,
-                                          @RequestBody OwnerProfileDto req) {
-    authHelper.requireQualityControl(authHeader);
+  @PostMapping("/masters/customer")
+  public CustomerProfileDto saveCustomerProfile(@RequestHeader("Authorization") String authHeader,
+                                          @RequestBody CustomerProfileDto req) {
+    authHelper.requireAdmin(authHeader);
     if (req.userId() == null)
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User Owner wajib dipilih");
-    if (req.ownerCode() == null || req.ownerCode().isBlank())
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ID Owner wajib diisi");
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User Customer wajib dipilih");
+    if (req.customerCode() == null || req.customerCode().isBlank())
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ID Customer wajib diisi");
     User user = userRepo.findById(req.userId())
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User tidak ditemukan"));
-    OwnerProfile profile = ownerProfileRepo.findByUserId(user.getId()).orElse(new OwnerProfile());
+    CustomerProfile profile = customerProfileRepo.findByUserId(user.getId()).orElse(new CustomerProfile());
     profile.setUser(user);
-    profile.setOwnerCode(req.ownerCode().trim());
-    profile = ownerProfileRepo.save(profile);
-    return new OwnerProfileDto(profile.getId(), user.getId(), user.getName(), user.getEmail(), profile.getOwnerCode());
+    profile.setCustomerCode(req.customerCode().trim());
+    profile = customerProfileRepo.save(profile);
+    return new CustomerProfileDto(profile.getId(), user.getId(), user.getName(), user.getEmail(), profile.getCustomerCode());
   }
 
-  @GetMapping("/masters/pc")
-  public List<ProjectControlProfileDto> pcProfiles(@RequestHeader("Authorization") String authHeader) {
-    authHelper.requireQualityControl(authHeader);
-    return pcProfileRepo.findAll().stream()
-        .map(p -> new ProjectControlProfileDto(p.getId(), p.getUser().getId(), p.getUser().getName(),
-            p.getUser().getEmail(), p.getPcCode()))
+  @GetMapping("/masters/driver")
+  public List<DriverProfileDto> driverProfiles(@RequestHeader("Authorization") String authHeader) {
+    authHelper.requireAdmin(authHeader);
+    return driverProfileRepo.findAll().stream()
+        .map(p -> new DriverProfileDto(p.getId(), p.getUser().getId(), p.getUser().getName(),
+            p.getUser().getEmail(), p.getDriverCode()))
         .toList();
   }
 
-  @PostMapping("/masters/pc")
-  public ProjectControlProfileDto savePcProfile(@RequestHeader("Authorization") String authHeader,
-                                                @RequestBody ProjectControlProfileDto req) {
-    authHelper.requireQualityControl(authHeader);
+  @PostMapping("/masters/driver")
+  public DriverProfileDto saveDriverProfile(@RequestHeader("Authorization") String authHeader,
+                                                @RequestBody DriverProfileDto req) {
+    authHelper.requireAdmin(authHeader);
     if (req.userId() == null)
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User Project Control wajib dipilih");
-    if (req.pcCode() == null || req.pcCode().isBlank())
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ID Project Control wajib diisi");
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User Driver wajib dipilih");
+    if (req.driverCode() == null || req.driverCode().isBlank())
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ID Driver wajib diisi");
     User user = userRepo.findById(req.userId())
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User tidak ditemukan"));
-    ProjectControlProfile profile = pcProfileRepo.findByUserId(user.getId()).orElse(new ProjectControlProfile());
+    DriverProfile profile = driverProfileRepo.findByUserId(user.getId()).orElse(new DriverProfile());
     profile.setUser(user);
-    profile.setPcCode(req.pcCode().trim());
-    profile = pcProfileRepo.save(profile);
-    return new ProjectControlProfileDto(profile.getId(), user.getId(), user.getName(), user.getEmail(), profile.getPcCode());
+    profile.setDriverCode(req.driverCode().trim());
+    profile = driverProfileRepo.save(profile);
+    return new DriverProfileDto(profile.getId(), user.getId(), user.getName(), user.getEmail(), profile.getDriverCode());
   }
 
   private QalDto toDto(QalRecord qal) {
@@ -379,24 +379,24 @@ public class QalController {
         qal.getQalDate(),
         qal.getSpk().getSpkNumber(),
         qal.getSpk().getJobName(),
-        qal.getQcCode(),
-        nameOf(qal.getQcUser()),
-        qal.getQcPosition(),
-        qal.getProjectControlCode(),
-        qal.getProjectControlName() != null ? qal.getProjectControlName() : nameOf(qal.getProjectControlUser()),
-        qal.getOwnerCode(),
-        qal.getOwnerName() != null ? qal.getOwnerName() : nameOf(qal.getOwnerUser()),
+        qal.getAdminCode(),
+        nameOf(qal.getAdminUser()),
+        qal.getAdminPosition(),
+        qal.getDriverCode(),
+        qal.getDriverName() != null ? qal.getDriverName() : nameOf(qal.getDriverUser()),
+        qal.getCustomerCode(),
+        qal.getCustomerName() != null ? qal.getCustomerName() : nameOf(qal.getCustomerUser()),
         qal.getStatus().name(),
         details
     );
   }
 
   private boolean canAccess(User user, QalRecord qal) {
-    if (user.getRole() == Role.QUALITY_CONTROL) return true;
-    if (user.getRole() == Role.PROJECT_CONTROL && qal.getProjectControlUser() != null)
-      return qal.getProjectControlUser().getId().equals(user.getId());
-    if (user.getRole() == Role.OWNER && qal.getOwnerUser() != null)
-      return qal.getOwnerUser().getId().equals(user.getId());
+    if (user.getRole() == Role.ADMIN) return true;
+    if (user.getRole() == Role.DRIVER && qal.getDriverUser() != null)
+      return qal.getDriverUser().getId().equals(user.getId());
+    if (user.getRole() == Role.CUSTOMER && qal.getCustomerUser() != null)
+      return qal.getCustomerUser().getId().equals(user.getId());
     return false;
   }
 
