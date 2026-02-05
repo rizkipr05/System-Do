@@ -61,9 +61,21 @@ async function fileToBase64(file) {
 el("proofForm").addEventListener("submit", async (e) => {
   e.preventDefault();
   const orderId = el("proofOrderSelect").value;
+  if (!orderId) {
+    showAlert("proofAlert", "Pilih DO terlebih dahulu.", "danger");
+    return;
+  }
   const proofFile = el("proofPhoto").files[0];
+  if (!proofFile) {
+    showAlert("proofAlert", "Foto penerimaan wajib diisi.", "danger");
+    return;
+  }
   const proofData = await fileToBase64(proofFile);
   const signatureData = canvas.toDataURL("image/png");
+  if (!signatureData || signatureData.length < 100) {
+    showAlert("proofAlert", "Tanda tangan wajib diisi.", "danger");
+    return;
+  }
   const payload = {
     status: "DELIVERED",
     note: el("proofNote").value.trim(),

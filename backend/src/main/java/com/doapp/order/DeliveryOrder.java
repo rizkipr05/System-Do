@@ -42,6 +42,9 @@ public class DeliveryOrder {
   @Column(name = "do_number", unique = true)
   private String doNumber;
 
+  @Column(name = "order_number")
+  private String orderNumber;
+
   @Enumerated(EnumType.STRING)
   private OrderStatus status = OrderStatus.DRAFT;
 
@@ -82,6 +85,9 @@ public class DeliveryOrder {
   public void onCreate() {
     this.createdAt = LocalDateTime.now();
     this.updatedAt = this.createdAt;
+    if (this.orderNumber == null && this.doNumber != null) {
+      this.orderNumber = this.doNumber;
+    }
   }
 
   @PreUpdate
@@ -99,7 +105,15 @@ public class DeliveryOrder {
   public void setAddress(Address address) { this.address = address; }
 
   public String getDoNumber() { return doNumber; }
-  public void setDoNumber(String doNumber) { this.doNumber = doNumber; }
+  public void setDoNumber(String doNumber) {
+    this.doNumber = doNumber;
+    if (this.orderNumber == null) {
+      this.orderNumber = doNumber;
+    }
+  }
+
+  public String getOrderNumber() { return orderNumber; }
+  public void setOrderNumber(String orderNumber) { this.orderNumber = orderNumber; }
 
   public OrderStatus getStatus() { return status; }
   public void setStatus(OrderStatus status) { this.status = status; }
