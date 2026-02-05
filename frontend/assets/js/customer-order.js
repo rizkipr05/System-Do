@@ -58,7 +58,14 @@ el("addItemBtn").addEventListener("click", (e) => {
   const productId = el("productSelect").value;
   const qty = Number(el("productQty").value || 0);
   const product = products.find((p) => `${p.id}` === productId);
-  if (!product || qty <= 0) return;
+  if (!product) {
+    showAlert("orderAlert", "Pilih produk terlebih dahulu.", "danger");
+    return;
+  }
+  if (qty <= 0) {
+    showAlert("orderAlert", "Jumlah barang harus lebih dari 0.", "danger");
+    return;
+  }
   const existing = cart.find((c) => c.productId === product.id);
   if (existing) {
     existing.quantity += qty;
@@ -82,7 +89,14 @@ el("cartTable").addEventListener("click", (e) => {
 });
 
 el("submitOrderBtn").addEventListener("click", async () => {
-  if (!cart.length) return;
+  if (!cart.length) {
+    showAlert("orderAlert", "Tambahkan barang terlebih dahulu.", "danger");
+    return;
+  }
+  if (!el("orderAddressSelect").value) {
+    showAlert("orderAlert", "Pilih alamat pengiriman.", "danger");
+    return;
+  }
   const payload = {
     addressId: el("orderAddressSelect").value,
     note: el("orderNote").value.trim(),

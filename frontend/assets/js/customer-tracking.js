@@ -10,7 +10,12 @@ function renderTrackingSteps(order) {
   const currentIndex = statusSteps.indexOf(order.status);
   statusSteps.forEach((s, idx) => {
     const li = document.createElement("li");
-    const active = idx <= currentIndex && currentIndex >= 0 ? "status-ok" : "status-warn";
+    let active = "status-warn";
+    if (order.status === "FAILED") {
+      active = idx <= currentIndex && currentIndex >= 0 ? "status-warn" : "status-warn";
+    } else {
+      active = idx <= currentIndex && currentIndex >= 0 ? "status-ok" : "status-warn";
+    }
     li.innerHTML = `<span class="status-pill ${active}">${statusLabels[s] || s}</span>`;
     steps.appendChild(li);
   });
@@ -19,7 +24,10 @@ function renderTrackingSteps(order) {
 
 function renderTracking() {
   const select = el("trackingOrderSelect");
-  select.innerHTML = orders.map((o) => `<option value="${o.id}">#${o.id} - ${statusLabels[o.status] || o.status}</option>`).join("");
+  select.innerHTML = orders.map((o) => {
+    const label = o.doNumber ? o.doNumber : `#${o.id}`;
+    return `<option value="${o.id}">${label} - ${statusLabels[o.status] || o.status}</option>`;
+  }).join("");
   if (!orders.length) {
     el("trackingEmpty").classList.remove("d-none");
     el("trackingSteps").innerHTML = "";

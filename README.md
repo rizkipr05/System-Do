@@ -46,21 +46,29 @@ Registrasi customer tersedia di `frontend/register-customer.html`.
 
 ## Fitur Utama
 ### Customer
-- Manajemen profil & alamat
-- Buat DO
-- Tracking status
-- Konfirmasi penerimaan
-- Riwayat pesanan
+- Registrasi & login
+- Manajemen profil (edit data diri & perusahaan)
+- Kelola alamat pengiriman
+- Buat pesanan / Delivery Order (pilih produk, input jumlah, pilih alamat, submit)
+- Tracking status pengiriman
+- Konfirmasi penerimaan (foto bukti, tanda tangan, catatan)
+- Riwayat pesanan & detail barang
 
 ### Admin
-- Master data customer & produk
-- DO manual + approval + update status
+- Manajemen master data customer
+- Manajemen produk & stok (harga, satuan, stok gudang)
+- Pembuatan DO manual + generate nomor DO otomatis
+- Approval DO & update status (Draft → Approved → Packing → Ready To Ship)
 - Assign driver & monitoring pengiriman
-- Laporan ringkas & cetak DO
+- Laporan (DO harian/bulanan, barang terlaris, customer aktif, status pengiriman)
+- Cetak dokumen (Print DO, Surat Jalan)
 - Notifikasi (simulasi)
 
 ### Driver
-- Dashboard driver (basic)
+- Login driver
+- Lihat DO yang ditugaskan
+- Update status pengiriman (Dalam Perjalanan, Terkirim, Gagal Kirim)
+- Upload bukti serah terima (foto, tanda tangan, catatan)
 
 ## Endpoint Ringkas
 Base URL: `http://localhost:8081/api`

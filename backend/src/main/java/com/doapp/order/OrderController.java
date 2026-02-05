@@ -163,6 +163,7 @@ public class OrderController {
 
     return new OrderDto(
         o.getId(),
+        o.getDoNumber(),
         o.getStatus().name(),
         o.getNote(),
         o.getCreatedAt(),

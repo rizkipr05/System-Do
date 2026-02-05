@@ -7,6 +7,7 @@ import java.util.List;
 
 public record OrderDto(
     Long id,
+    String doNumber,
     String status,
     String note,
     LocalDateTime createdAt,

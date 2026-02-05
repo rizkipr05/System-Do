@@ -87,8 +87,18 @@ el("customerForm").addEventListener("submit", async (e) => {
     if (userId) {
       await updateExisting(userId);
     } else {
-      const created = await postJson("/admin/customers", payload);
-      savedUserId = created?.userId || userId;
+      // Pre-check by email to avoid 409 conflict.
+      const customers = await getJson("/admin/customers");
+      const email = payload.email.toLowerCase();
+      const existing = customers.find((x) => (x.email || "").toLowerCase() === email);
+      if (existing?.userId) {
+        el("custUserId").value = existing.userId;
+        await updateExisting(existing.userId);
+        savedUserId = existing.userId;
+      } else {
+        const created = await postJson("/admin/customers", payload);
+        savedUserId = created?.userId || userId;
+      }
     }
 
     const addrPayload = {

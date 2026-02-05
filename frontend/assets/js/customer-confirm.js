@@ -6,7 +6,10 @@ let orders = [];
 
 function renderConfirmOptions() {
   const delivered = orders.filter((o) => o.status === "DELIVERED");
-  el("confirmOrderSelect").innerHTML = delivered.map((o) => `<option value="${o.id}">#${o.id}</option>`).join("");
+  el("confirmOrderSelect").innerHTML = delivered.map((o) => {
+    const label = o.doNumber ? o.doNumber : `#${o.id}`;
+    return `<option value="${o.id}">${label}</option>`;
+  }).join("");
   if (!delivered.length) {
     el("confirmOrderSelect").innerHTML = `<option value="">Belum ada order terkirim</option>`;
   }
@@ -65,11 +68,16 @@ el("submitConfirmBtn").addEventListener("click", async (e) => {
   e.preventDefault();
   const orderId = el("confirmOrderSelect").value;
   if (!orderId) return;
+  const receiverName = el("confirmReceiver").value.trim();
+  if (!receiverName) {
+    showAlert("confirmAlert", "Nama penerima wajib diisi", "danger");
+    return;
+  }
   const proofFile = el("confirmProof").files[0];
   const proofData = await fileToBase64(proofFile);
   const signatureData = canvas.toDataURL("image/png");
   const payload = {
-    receiverName: el("confirmReceiver").value.trim(),
+    receiverName,
     note: el("confirmNote").value.trim(),
     proofImageData: proofData,
     signatureData
