@@ -58,6 +58,10 @@ public class AuthService {
     Customer c = new Customer();
     c.setUser(u);
     c.setCustomerCode("CUST-" + String.format("%04d", u.getId()));
+    c.setName(u.getName());
+    c.setEmail(u.getEmail());
+    c.setPhone(u.getPhone());
+    c.setActive(u.isActive());
     customerRepo.save(c);
   }
 

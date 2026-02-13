@@ -134,6 +134,10 @@ public class AdminController {
     c.setUser(u);
     c.setCustomerCode("CUST-" + String.format("%04d", u.getId()));
     c.setCompanyName(req.companyName() == null ? null : req.companyName().trim());
+    c.setName(u.getName());
+    c.setEmail(u.getEmail());
+    c.setPhone(u.getPhone());
+    c.setActive(u.isActive());
     customerRepo.save(c);
 
     return new AdminCustomerDto(
@@ -163,6 +167,10 @@ public class AdminController {
     if (req.active() != null) u.setActive(req.active());
 
     if (req.companyName() != null) c.setCompanyName(req.companyName().trim());
+    c.setName(u.getName());
+    c.setEmail(u.getEmail());
+    c.setPhone(u.getPhone());
+    c.setActive(u.isActive());
 
     userRepo.save(u);
     customerRepo.save(c);
